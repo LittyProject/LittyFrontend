@@ -1,32 +1,42 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <Navbar v-if="isAuthorized" icon="mdi-comment-multiple" name="general"/>
+    <Navbar v-else :icon="topbar[$route.name] ? topbar[$route.name].icon : 'mdi-comment-multiple'" :name="topbar[$route.name] ? topbar[$route.name].name : 'general'"/>
+    <v-content
+      class="dark-theme dark-content"
+    >
+     <router-view/>
+    </v-content>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Navbar from "@/components/layout/Navbar";
+import colors from '@/assets/colors.json';
+import topbar from '@/assets/topbar.json';
 
-#nav {
-  padding: 30px;
+export default {
+  name: 'Main',
+  components: {
+    Navbar
+  },
+  data: () => ({
+    colors,
+    topbar
+  }),
+  computed: {
+    isAuthorized: {
+      get() {
+        return this.$store.getters.getIsAuth;
+      },
+      set() {
+        return this.$store.commit("authorization");
+      }
+    }
+  }
 }
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style lang="scss">
+@import "@/assets/scss/main/index.scss";
 </style>

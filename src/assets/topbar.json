@@ -1,0 +1,26 @@
+{
+  "NotFound": {
+    "name": "Not Found",
+    "icon": "mdi-alert"
+  },
+  "Register": {
+    "name": "Register",
+    "icon": "mdi-account-plus"
+  },
+  "Login": {
+    "name": "Login",
+    "icon": "mdi-login-variant"
+  },
+  "Colors": {
+    "name": "Colors",
+    "icon": "mdi-palette"
+  },
+  "About": {
+    "name": "About",
+    "icon": "mdi-information"
+  },
+  "Home": {
+    "name": "Litty",
+    "icon": "mdi-information"
+  }
+}
