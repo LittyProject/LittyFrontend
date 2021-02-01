@@ -27,7 +27,10 @@ export default {
   computed: {
     isAuthorized: {
       get() {
-        return this.$store.getters.getIsAuth;
+        if(localStorage.getItem("token")) {
+          return true;
+        }
+        return false;
       },
       set() {
         return this.$store.commit("authorization");

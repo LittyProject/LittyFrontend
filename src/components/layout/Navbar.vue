@@ -5,19 +5,35 @@
         :color="colors.otherDark"
         app
     >
-      <div v-if="isAuthorized">
+      <div v-if="login">
         <v-list-item>
           <v-list-item-content class="dark-content">
             <v-list-item-title class="title">
-              <v-avatar
-                  :color="colors.grey"
-                  size="32"
-                  max-width="32"
-                  class="mr-5"
-              >
-                <img :src="user.avatarURL" alt="Avatar"/>
-              </v-avatar>
-              {{ user.username }}#{{ user.tag }}
+              <div class="mr-3 d-inline-block ds">
+                <v-badge
+                    bottom
+                    offset-y="19"
+                    offset-x="12"
+                    color="cyan lighten-2"
+                    title="Programuje"
+                >
+                  <v-avatar
+                      :color="colors.grey"
+                      size="50"
+                      max-width="50"
+                  >
+                    <img :src="this.user.avatarURL" alt="Avatar"/>
+                  </v-avatar>
+                </v-badge>
+              </div>
+              <div class="d-inline-block">
+                <span style="font-size: 16px">{{ this.user.username }}</span><div style="display: inline-block; margin-left: 4px;" v-if="this.user.badges.includes('VERIFIED')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="aqua" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                </svg>
+              </div>
+                <span style="font-size: 15px; display: block">#{{ this.user.tag }}</span>
+              </div>
             </v-list-item-title>
             <v-list-item-subtitle>
               <span
@@ -33,7 +49,7 @@
                   medium
                   class="ml-3 dark-btn"
               >
-                mdi-cog
+                mdi-bell
               </v-icon>
               <v-icon
                   :color="colors.white"
@@ -43,7 +59,7 @@
                 mdi-cog
               </v-icon>
               <v-icon
-                  :color="colors.white"
+                  :color="colors.red"
                   medium
                   class="ml-3 dark-btn"
                   @click="to('Logout')"
@@ -64,16 +80,17 @@
               v-for="server in servers"
               :key="server.name"
               link
-              class="dark-list"
+              class="dark-list pa-1"
           >
             <v-list-item-icon>
-              <v-avatar size="24">
+              <v-avatar size="35">
                 <img :src="server.iconURL" :alt="server.name"/>
               </v-avatar>
             </v-list-item-icon>
 
             <v-list-item-content class="dark-content">
-              <v-list-item-title>{{ server.name }}</v-list-item-title>
+              <v-list-item-title
+              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> 13 <div class="ml-2 dot-grey"></div> 13</span></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -209,18 +226,39 @@ export default {
       colors,
       logo,
       servers: [
-        {name: 'a', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'b', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'a', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'b', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'a', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'b', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'a', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'b', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'a', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'},
-        {name: 'b', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png'}
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
+        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
       ],
-      user: {username: "Mespi", tag: 6377}
+      user: {},
+      login: false
+    }
+  },
+  mounted() {
+    if(localStorage.getItem("token")){
+      this.login=true;
+      this.user=JSON.parse(localStorage.getItem("user"));
     }
   },
   methods: {
@@ -244,6 +282,11 @@ export default {
       set() {
         return this.$store.commit("authorization");
       }
+    },
+    getUser: {
+      get() {
+        return this.$store.getters.getUser;
+      },
     }
   }
 }

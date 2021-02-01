@@ -28,6 +28,27 @@ input {
   margin-top: 10px;
 }
 
+.ds{
+  margin-bottom: 12px;
+}
+
+.dot-grey {
+  height: 14px;
+  width: 14px;
+  background-color: $grey;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-green {
+  height: 14px;
+  width: 14px;
+  background-color: $green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+
 .dark-btn:hover {
   background: $grey;
   padding: 3px;
@@ -37,10 +58,30 @@ input {
 
 .dark-list:hover {
   background: $dark;
+
 }
 
 @media screen and (max-width: 1000px) {
   .mobile {
     display: none;
   }
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #2e313a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #414551;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #414551;
 }
