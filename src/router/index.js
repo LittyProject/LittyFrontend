@@ -34,7 +34,7 @@ const routes = [
     meta: {
       requireAuth: false
     },
-    component: () => import('../views/Colors.vue')
+    component: () => import('../views/Login.vue')
   },
   {
     path: '/auth/register',
@@ -42,7 +42,7 @@ const routes = [
     meta: {
       requireAuth: false
     },
-    component: () => import('../views/Colors.vue')
+    component: () => import('../views/Login.vue')
   },
   {
     path: '*',

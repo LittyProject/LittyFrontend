@@ -12,8 +12,20 @@ $white: #fcfcfc;
   background: $deepDark;
 }
 
+.dark-error {
+  color: $white;
+  background-color: $red;
+  margin: 15px 15px;
+}
+
 .dark-content {
   color: $white;
+}
+
+input {
+  border: 1px $white solid;
+  display: block;
+  margin-top: 10px;
 }
 
 .dark-btn:hover {
