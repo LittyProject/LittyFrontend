@@ -29,6 +29,14 @@ const routes = [
     component: () => import('../views/Colors.vue')
   },
   {
+    path: '/test',
+    name: 'test',
+    meta: {
+      requireAuth: false
+    },
+    component: () => import('../views/WebApp.vue')
+  },
+  {
     path: '/logout',
     name: 'Logout',
     meta: {

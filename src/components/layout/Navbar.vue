@@ -48,6 +48,14 @@
                   :color="colors.white"
                   medium
                   class="ml-3 dark-btn"
+                  @click="setTab(1)"
+              >
+                mdi-email-edit
+              </v-icon>
+              <v-icon
+                  :color="colors.white"
+                  medium
+                  class="ml-3 dark-btn"
               >
                 mdi-bell
               </v-icon>
@@ -55,6 +63,7 @@
                   :color="colors.white"
                   medium
                   class="ml-3 dark-btn"
+                  @click="setTab(2)"
               >
                 mdi-cog
               </v-icon>
@@ -264,6 +273,11 @@ export default {
   methods: {
     to(value) {
       this.$router.push({name: value});
+    },
+    setTab(tab){
+      localStorage.setItem("tab", tab);
+      this.$store.commit("updateTab", tab);
+      this.tab=tab;
     }
   },
   computed: {

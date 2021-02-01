@@ -9,7 +9,8 @@ export default new Vuex.Store({
     token: null,
     user: {},
     socket: null,
-    drawer: true
+    drawer: true,
+    tab: 0,
   },
   mutations: {
     authorization (state){
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     },
     updateDrawer(state, drawer) {
       state.drawer = drawer;
+    },
+    updateTab(state, tab){
+      state.tab=tab;
     }
   },
   getters: {
@@ -43,6 +47,9 @@ export default new Vuex.Store({
     },
     getDrawer: state => {
       return state.drawer;
+    },
+    getTab: state =>{
+      return state.tab;
     }
   },
   actions: {
