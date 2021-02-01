@@ -29,6 +29,18 @@ const routes = [
     component: () => import('../views/Colors.vue')
   },
   {
+    path: '/logout',
+    name: 'Logout',
+    meta: {
+      requireAuth: true
+    },
+    beforeEnter() {
+      if(this.$store.getters.getIsAuth) this.$store.commit("authorization");
+      this.$store.commit("updateToken", null);
+      this.$store.commit("updateUser", {});
+    }
+  },
+  {
     path: '/auth/login',
     name: 'Login',
     meta: {
@@ -42,7 +54,7 @@ const routes = [
     meta: {
       requireAuth: false
     },
-    component: () => import('../views/Login.vue')
+    component: () => import('../views/Register.vue')
   },
   {
     path: '*',
