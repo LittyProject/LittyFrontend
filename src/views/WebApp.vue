@@ -12,8 +12,6 @@ import DirectMessage from "@/components/tabs/DirectMessage";
 import Settings from "@/components/tabs/Settings";
 
 export default {
-
-
   name: "WebApp",
   components: {HomeApp, DirectMessage, Settings},
   data(){
@@ -26,6 +24,12 @@ export default {
       localStorage.setItem("tab", tab);
       this.$store.commit("updateTab", tab);
       this.tab=tab;
+    }
+  },
+  sockets: {
+    connect: function () { // Do nothing... Server displays, that socket is connected, but we have to authorize user.
+      console.log("Connected");
+      this.$socket.emit('authentication', {token: localStorage.getItem("token")});
     }
   },
   mounted() {
