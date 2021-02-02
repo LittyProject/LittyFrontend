@@ -29,8 +29,8 @@ const routes = [
     component: () => import('../views/Colors.vue')
   },
   {
-    path: '/test',
-    name: 'test',
+    path: '/app',
+    name: 'WebApp',
     meta: {
       requireAuth: false
     },
@@ -46,10 +46,11 @@ const routes = [
       if(this.$store.getters.getIsAuth) this.$store.commit("authorization");
       this.$store.commit("updateToken", null);
       this.$store.commit("updateUser", {});
+      this.$router.push({ name: 'Home' });
     }
   },
   {
-    path: '/auth/login',
+    path: '/login',
     name: 'Login',
     meta: {
       requireAuth: false
@@ -57,7 +58,7 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/auth/register',
+    path: '/register',
     name: 'Register',
     meta: {
       requireAuth: false
@@ -81,7 +82,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.requireAuth && this.$store.getters.getIsAuth) return next();
+  if(to.meta.requireAuth) {
+    if(this.$store.getters.getIsAuth) {
+      return next();
+    } else {
+      return this.$router.push({ name: 'Home' });
+    }
+  }
   return next();
 });
 

@@ -61,6 +61,7 @@ export default {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data));
           this.$store.commit("updateUser", data);
+          await this.$router.push({name: "WebApp"});
         }
         return false;
       }

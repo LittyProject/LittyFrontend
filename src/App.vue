@@ -2,11 +2,11 @@
   <v-app>
     <Navbar v-if="isAuthorized" icon="mdi-comment-multiple" name="general"/>
     <Navbar v-else :icon="topbar[$route.name] ? topbar[$route.name].icon : 'mdi-comment-multiple'" :name="topbar[$route.name] ? topbar[$route.name].name : 'general'"/>
-    <v-content
+    <v-main
       class="dark-theme dark-content"
     >
      <router-view/>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

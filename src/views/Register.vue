@@ -57,6 +57,7 @@ export default {
           if(!this.$store.getters.getIsAuth) this.$store.commit("authorization");
           this.$store.commit("updateToken", data.token);
           this.$store.commit("updateUser", data);
+          await this.$router.push({name: "WebApp"});
         }
       }
 
