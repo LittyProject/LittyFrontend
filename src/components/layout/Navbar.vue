@@ -40,10 +40,6 @@
                   class="ml-16"
               >
               </span>
-              <span
-                  class="ml-8"
-              >
-              </span>
               <v-icon
                   :color="colors.white"
                   medium
@@ -103,6 +99,12 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
+
+        <div>
+          <button>
+
+          </button>
+        </div>
       </div>
       <div v-else>
         <v-list-item>
@@ -234,10 +236,7 @@ export default {
     return {
       colors,
       logo,
-      servers: [
-        {name: '😎 Fajny serwer', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
-        {name: '👥 Support', iconURL: 'https://cdn.discordapp.com/attachments/761583370916200461/766982399946915840/paleta1.png', owner: "System#0000"},
-      ],
+      servers: [],
       user: {},
       login: false
     }
@@ -246,6 +245,7 @@ export default {
     if(localStorage.getItem("token")){
       this.login=true;
       this.user=JSON.parse(localStorage.getItem("user"));
+      this.servers=this.user.servers;
     }
   },
   methods: {

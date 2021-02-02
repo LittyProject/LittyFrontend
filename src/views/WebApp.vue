@@ -28,13 +28,12 @@ export default {
   },
   sockets: {
     connect: function () {
-      console.log("Connected");
-      document.getElementById("connection").innerText = "Connected";
       this.$socket.emit('authentication', {token: localStorage.getItem("token")});
     },
     customEmit: function () {
       console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
     }
+
   },
   mounted() {
     if(localStorage.getItem("tab")) {
@@ -45,11 +44,8 @@ export default {
     setTimeout(() => {
       setInterval(() => {
         if (!this.$socket.connected) {
-          document.getElementById("connection").innerText = "Disconnected";
           this.$socket.connect();
           setTimeout(() => {
-            console.log("Connected");
-            document.getElementById("connection").innerText = "Connected";
             this.$socket.emit('authentication', {token: localStorage.getItem("token")});
           }, 1000);
         }

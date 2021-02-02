@@ -42,12 +42,12 @@ const routes = [
     meta: {
       requireAuth: true
     },
-    beforeEnter() {
-      if(this.$store.getters.getIsAuth) this.$store.commit("authorization");
-      this.$store.commit("updateToken", null);
-      this.$store.commit("updateUser", {});
-      this.$router.push({ name: 'Home' });
-    }
+    beforeEnter(to, from, next) {
+      if(localStorage.getItem("token")) localStorage.removeItem("token");
+      if(localStorage.getItem("user")) localStorage.removeItem("user");
+      return next(vm => vm.$router.push({ name: 'About' }));
+    },
+    component: () => import('../views/Home.vue')
   },
   {
     path: '/login',
@@ -83,10 +83,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.meta.requireAuth) {
-    if(this.$store.getters.getIsAuth) {
+    if(localStorage.getItem("token")) {
       return next();
     } else {
-      return this.$router.push({ name: 'Home' });
+      return next(vm => vm.$router.push({ name: 'Home' }));
     }
   }
   return next();
