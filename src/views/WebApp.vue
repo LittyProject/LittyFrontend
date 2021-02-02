@@ -30,10 +30,10 @@ export default {
     connect: function () {
       this.$socket.emit('authentication', {token: localStorage.getItem("token")});
     },
-    customEmit: function () {
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
-    }
+    createServer: function (data) {
+      console.log(data);
 
+    }
   },
   mounted() {
     if(localStorage.getItem("tab")) {
