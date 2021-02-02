@@ -27,9 +27,13 @@ export default {
     }
   },
   sockets: {
-    connect: function () { // Do nothing... Server displays, that socket is connected, but we have to authorize user.
+    connect: function () {
       console.log("Connected");
+      document.getElementById("connection").innerText = "Connected";
       this.$socket.emit('authentication', {token: localStorage.getItem("token")});
+    },
+    customEmit: function () {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
     }
   },
   mounted() {
@@ -37,12 +41,20 @@ export default {
       this.tab=parseInt(localStorage.getItem("tab"));
       this.$store.commit("updateTab", parseInt(localStorage.getItem("tab")));
     }
-  },
-  watch(){
-    if(localStorage.getItem("tab")) {
-      this.tab=parseInt(localStorage.getItem("tab"));
-      this.$store.commit("updateTab", parseInt(localStorage.getItem("tab")));
-    }
+
+    setTimeout(() => {
+      setInterval(() => {
+        if (!this.$socket.connected) {
+          document.getElementById("connection").innerText = "Disconnected";
+          this.$socket.connect();
+          setTimeout(() => {
+            console.log("Connected");
+            document.getElementById("connection").innerText = "Connected";
+            this.$socket.emit('authentication', {token: localStorage.getItem("token")});
+          }, 1000);
+        }
+      }, 6000);
+    }, 10000);
   }
 }
 </script>

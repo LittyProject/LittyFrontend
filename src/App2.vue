@@ -3,7 +3,6 @@
     <v-main
         class="dark-theme dark-content"
     >
-      <div id="connection">Disconnected</div>
       <router-view/>
     </v-main>
   </v-app>
@@ -17,7 +16,7 @@ export default {
   data: () => ({
     colors,
     topbar
-  }),
+  })
 }
 </script>
 
