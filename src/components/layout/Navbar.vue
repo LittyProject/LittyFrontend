@@ -10,13 +10,7 @@
           <v-list-item-content class="dark-content">
             <v-list-item-title class="title">
               <div class="mr-3 d-inline-block ds">
-                <v-badge
-                    bottom
-                    offset-y="19"
-                    offset-x="12"
-                    color="cyan lighten-2"
-                    title="Programuje"
-                >
+                <UserStatus :status="this.user.status">
                   <v-avatar
                       :color="colors.grey"
                       size="50"
@@ -24,7 +18,7 @@
                   >
                     <img :src="this.user.avatarURL" alt="Avatar"/>
                   </v-avatar>
-                </v-badge>
+                </UserStatus>
               </div>
               <div class="d-inline-block">
                 <span style="font-size: 16px">{{ this.user.username }}</span><div style="display: inline-block; margin-left: 4px;" v-if="this.user.badges.includes('VERIFIED')">
@@ -225,10 +219,11 @@
 <script>
 import colors from '@/assets/colors.json';
 import Topbar from "@/components/layout/Topbar";
+import UserStatus from "@/components/layout/UserStatus";
 import logo from '../../../public/logo.svg';
 export default {
   name: 'Navbar',
-  components: {Topbar},
+  components: {Topbar, UserStatus},
   props: [
     'name', 'icon'
   ],

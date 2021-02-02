@@ -12,6 +12,10 @@ export const bus = new Vue();
 Vue.use(new VueSocketIO({
   debug: false,
   connection: 'http://localhost:1920',
+  options: {
+    transports: [ 'websocket', 'polling' ],
+    credentials: true
+  }
 }))
 
 new Vue({

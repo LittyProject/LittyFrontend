@@ -33,6 +33,12 @@ export default {
     createServer: function (data) {
       console.log(data);
 
+    },
+    authenticated: function (data){
+      console.log(data);
+    },
+    updateCustomStatus: function (){
+      console.log("zooooooo");
     }
   },
   mounted() {
