@@ -38,6 +38,14 @@ $white: #fcfcfc;
   color: $grey;
 }
 
+.bg-0{
+  background-color: $grey;
+}
+
+.bg-1{
+  background-color: $green;
+}
+
 .color-1{
   color: $green;
 }
@@ -95,6 +103,7 @@ $white: #fcfcfc;
 
 
 ::-webkit-scrollbar {
+  background-color: #2b2e37;
   width: 10px;
 }
 

@@ -1,8 +1,23 @@
 <template>
   <div>
-    <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
-    <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
-    <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
+    <div class="text-center mt-5" v-if="!load">
+      <img src="@/assets/logo.svg" width="200" height="200">
+      <h1 class="mt-2">Litty</h1>
+      <div class="mt-10 mb-10" style="background-color: #414551; height: 4px; width: 90%; margin-left: 5%"></div>
+      <v-progress-circular
+          :size="70"
+          :width="7"
+          color="white"
+          class="mt-16"
+          indeterminate
+      ></v-progress-circular>
+      <h3 class="mt-10">Ładowanie aplikacji...</h3>
+    </div>
+    <div v-else>
+      <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
+      <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
+      <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
+    </div>
   </div>
 </template>
 
@@ -17,6 +32,7 @@ export default {
   data(){
     return{
       tab: 0,
+      load: false
     }
   },
   methods:{
@@ -51,12 +67,33 @@ export default {
       localStorage.setItem("user", JSON.stringify(a));
     }
   },
-  mounted() {
+  async mounted() {
+    if(!localStorage.getItem("token")){
+      return await this.$router.push({name: "Login"});
+    }
     if(localStorage.getItem("tab")) {
       this.tab=parseInt(localStorage.getItem("tab"));
       this.$store.commit("updateTab", parseInt(localStorage.getItem("tab")));
     }
-
+    let user = JSON.parse(localStorage.getItem("user"));
+    let servers = [];
+    await Promise.all(
+        user.servers.map(async (serverId) => {
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
+        };
+        const response = await fetch("http://192.168.8.42:1920/servers/"+serverId, requestOptions);
+        const data = await response.json();
+        servers.push(data);
+    }));
+    localStorage.setItem("servers", JSON.stringify(servers));
+    if (!this.$socket.connected) {
+      this.$socket.connect();
+      setTimeout(() => {
+        this.$socket.emit('authentication', {token: localStorage.getItem("token")});
+      }, 1000);
+    }
     setTimeout(() => {
       setInterval(() => {
         if (!this.$socket.connected) {
@@ -67,6 +104,7 @@ export default {
         }
       }, 6000);
     }, 10000);
+    this.load=true;
   }
 }
 </script>

@@ -1,31 +1,76 @@
 <template>
-  <form
-      @submit="auth"
-  >
-    <div class="dark-error" id="feedback"></div>
-    <label class="dark-content">
-      <h1>Username</h1>
-      <input name="username" type="text" class="dark-content" v-model="username" minlength="3" maxlength="24" required/>
-    </label>
-    <label class="dark-content">
-      <h1>Email</h1>
-      <input name="email" type="email" class="dark-content" v-model="email" required/>
-    </label>
-    <label>
-      <h1>Password</h1>
-      <input name="password" type="password" class="dark-content" v-model="password" minlength="8" maxlength="32" required/>
-    </label>
-    <label>
-      <h1>Confirm Password</h1>
-      <input name="confirmPassword" type="password" class="dark-content" v-model="confirmPassword" minlength="8" maxlength="32" required/>
-    </label>
-    <label>
-      <input
-          type="submit"
-          value="Submit"
-      >
-    </label>
-  </form>
+  <div class="ml-5 text-center">
+    <img src="@/assets/logo.svg" width="200" height="200">
+    <h1 class="mt-2">Dołącz do <strong>Litty</strong> właśnie teraz</h1>
+    <div class="mt-10 mb-10" style="background-color: #414551; height: 4px; width: 90%; margin-left: 5%"></div>
+    <form
+        @submit="auth"
+        class="text-left ml-16"
+    >
+
+      <div style="width: 75%; margin-left: 10%;" class="mt-16 pa-5">
+        <v-banner
+            v-if="error.length>0"
+            elevation="10"
+            color="red"
+            dark
+            class="mb-5 pa-3 rounded"
+            v-html="error"
+        ></v-banner>
+        <v-text-field
+            label="Nazwa użytkownika"
+            v-model="username"
+            hide-details="auto"
+            outlined
+            :rules="rules.username"
+            class="mt-1 mb-1"
+            dark
+        ></v-text-field>
+        <v-text-field
+            label="Email"
+            v-model="email"
+            hide-details="auto"
+            outlined
+            :rules="rules.email"
+            class="mt-2 mb-1"
+            dark
+        ></v-text-field>
+        <v-row>
+          <v-col>
+            <v-text-field
+                label="Hasło"
+                outlined
+                v-model="password"
+                type="password"
+                :rules="rules.password"
+                class="mt-1 mb-1"
+                dark
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+                label="Powtórz hasło"
+                outlined
+                v-model="confirmPassword"
+                type="password"
+                :rules="rules.reapetPassword"
+                class="mt-1 mb-1"
+                dark
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-btn
+            depressed
+            @click="auth"
+            color="success"
+            dark
+            right
+        >
+          Zarejestruj
+        </v-btn>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -33,10 +78,35 @@ export default {
   name: "Register",
   data() {
     return {
-      errors: [],
+      error: "",
       email: null,
       password: null,
-      username: null
+      confirmPassword: null,
+      username: null,
+      rules: {
+        email:[
+          value => !!value || 'Required.',
+          value => (value || '').length <= 20 || 'Max 20 characters',
+          value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Invalid e-mail.'
+          },
+        ],
+        password:[
+          value => !!value || 'Required.',
+          value => (value || '').length <= 16 || 'Max 16 characters',
+        ],
+        reapetPassword:[
+          () => !!this.password || 'Najpierw podaj hasło',
+          value => !!value || 'Wymagane.',
+          value => (value || '').length <= 16 || 'Max 16 characters',
+          value => value===this.password || 'Hasła nie są takie same'
+        ],
+        username: [
+          value => !!value || 'Required.',
+          value => (value || '').length <= 20 || 'Max 20 characters',
+        ]
+      },
     };
   },
   methods:{
@@ -48,11 +118,11 @@ export default {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: this.email, password: this.password, username: this.username })
         };
-        const response = await fetch("http://localhost:1920/auth/register", requestOptions);
+        const response = await fetch("http://192.168.8.42:1920/auth/register", requestOptions);
         const data = await response.json();
         //document.getElementById("feedback").innerHTML = JSON.stringify(data);
         if(data.error) {
-          document.getElementById("feedback").innerHTML = data.error;
+          this.error="Wystąpił błąd podczas rejestracji. Sprawdź poprawność formularza"
         } else {
           if(!this.$store.getters.getIsAuth) this.$store.commit("authorization");
           this.$store.commit("updateToken", data.token);
@@ -61,17 +131,17 @@ export default {
         }
       }
 
-      this.errors = [];
+      let error="";
 
       if (!this.email) {
-        this.errors.push('Email required.');
+        error= 'Email required.';
       } else if (this.password !== this.confirmPassword) {
-        this.errors.push('Password doesn\'t match.');
+        error= 'Password doesn\'t match.';
       } else if (!this.username) {
-        this.errors.push('Username required.');
+  error= 'Username required.';
       }
 
-      document.getElementById("feedback").innerHTML = this.errors.map(val => val).join("<br><br>");
+      this.error="Wystąpił błąd podczas rejestracji. Sprawdź poprawność formularza.<br><br>"+error;
       return false;
     }
   }

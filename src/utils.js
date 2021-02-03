@@ -1,12 +1,13 @@
 module.exports.parseStatusToColor = (status) =>{
     switch (status){
         case 0:
-            return 'grey';
         case 1:
-            return 'green';
+            return 'grey';
         case 2:
-            return 'warning';
+            return 'green';
         case 3:
+            return 'warning';
+        case 4:
             return 'red';
         default:
             return 'purple';

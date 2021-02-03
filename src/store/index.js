@@ -11,6 +11,7 @@ export default new Vuex.Store({
     socket: null,
     drawer: true,
     tab: 0,
+    nav: 0,
   },
   mutations: {
     authorization (state){
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     },
     updateTab(state, tab){
       state.tab=tab;
+    },
+    updateNav(state, nav){
+      state.nav=nav;
     }
   },
   getters: {
@@ -50,6 +54,9 @@ export default new Vuex.Store({
     },
     getTab: state =>{
       return state.tab;
+    },
+    getNav: state =>{
+      return state.nav;
     }
   },
   actions: {

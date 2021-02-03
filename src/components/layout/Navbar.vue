@@ -38,9 +38,19 @@
                   :color="colors.white"
                   medium
                   class="ml-3 dark-btn"
+                  v-if="this.$store.getters.getNav<=0"
                   @click="setTab(1)"
               >
                 mdi-email-edit
+              </v-icon>
+              <v-icon
+                  :color="colors.white"
+                  medium
+                  class="ml-3 dark-btn"
+                  v-if="this.$store.getters.getNav>=1"
+                  @click="setTab(0)"
+              >
+                mdi-human-greeting
               </v-icon>
               <v-icon
                   :color="colors.white"
@@ -73,6 +83,7 @@
 
         <v-list
             dense
+            v-if="this.$store.getters.getNav<=0"
             nav
         >
           <v-list-item
@@ -89,7 +100,7 @@
 
             <v-list-item-content class="dark-content">
               <v-list-item-title
-              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ server.members.filter(x => x.status != 0).length }} <div class="ml-2 dot-grey"></div> {{ server.members.length }}</span></v-list-item-title>
+              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ server.members.filter(x => x.status>1).length }} <div class="ml-2 dot-grey"></div>{{ server.members.filter(x => x.status==0||x.status==1).length }}</span></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -220,7 +231,7 @@
 import colors from '@/assets/colors.json';
 import Topbar from "@/components/layout/Topbar";
 import UserStatus from "@/components/layout/UserStatus";
-import logo from '../../../public/logo.svg';
+import logo from '../../assets/logo.svg';
 export default {
   name: 'Navbar',
   components: {Topbar, UserStatus},
@@ -233,24 +244,22 @@ export default {
       logo,
       servers: [],
       user: {},
-      login: false
+      login: false,
+      tab: 0,
+      nav: 0,
     }
   },
   async mounted() {
     if(localStorage.getItem("token")){
       this.login=true;
       this.user=JSON.parse(localStorage.getItem("user"));
-      this.servers = [];
-      console.log(this.user.servers);
-      this.user.servers.forEach(async (serverId) => {
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "Authorization": `BEARER ${this.user.token}` }
-        };
-        const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions);
-        const data = await response.json();
-        this.servers.push(data);
-      })
+      this.servers=JSON.parse(localStorage.getItem("servers"));
+      if(localStorage.getItem("tab")){
+        this.tab=parseInt(localStorage.getItem("tab"));
+      }
+      if(localStorage.getItem("nav")){
+        this.nav=parseInt(localStorage.getItem("nav"));
+      }
     }
   },
   methods: {
@@ -258,9 +267,33 @@ export default {
       this.$router.push({name: value});
     },
     setTab(tab){
+      let a = parseInt(tab);
+      if(a<=0){
+        localStorage.setItem("nav", tab);
+        this.$store.commit("updateNav", 0);
+        this.nav=0;
+      }else if(a>=1){
+        localStorage.setItem("nav", tab);
+        this.$store.commit("updateNav", 1);
+        this.nav=1;
+      }
       localStorage.setItem("tab", tab);
       this.$store.commit("updateTab", tab);
       this.tab=tab;
+    }
+  },
+  sockets:{
+    updateCustomStatus: function (data){
+      if(data.status) {
+        let u = JSON.parse(localStorage.getItem("user"));
+        this.servers.map(a=>{
+          a.members.map(x => {
+            if(x.id===u.id){
+              x.status=data.status;
+            }
+          })
+        });
+      }
     }
   },
   computed: {
