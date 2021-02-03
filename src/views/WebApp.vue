@@ -37,8 +37,16 @@ export default {
     authenticated: function (data){
       console.log(data);
     },
-    updateCustomStatus: function (){
-      console.log("zooooooo");
+    updateCustomStatus: function (data){
+      let a = JSON.parse(localStorage.getItem("user"));
+      if(data.status){
+        a.status=data.status;
+      }
+      if(data.customStatus){
+        a.customStatus=data.customStatus;
+      }
+      this.$store.commit("updateUser", a);
+      localStorage.setItem("user", JSON.stringify(a));
     }
   },
   mounted() {
@@ -61,6 +69,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

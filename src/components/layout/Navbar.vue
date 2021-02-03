@@ -10,7 +10,7 @@
           <v-list-item-content class="dark-content">
             <v-list-item-title class="title">
               <div class="mr-3 d-inline-block ds">
-                <UserStatus :status="this.user.status">
+                <UserStatus>
                   <v-avatar
                       :color="colors.grey"
                       size="50"
