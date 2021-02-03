@@ -83,7 +83,7 @@ export default {
           method: "GET",
           headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
         };
-        const response = await fetch("http://192.168.8.42:1920/servers/"+serverId, requestOptions);
+        const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions);
         const data = await response.json();
         servers.push(data);
     }));

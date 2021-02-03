@@ -257,9 +257,6 @@ export default {
       if(localStorage.getItem("tab")){
         this.tab=parseInt(localStorage.getItem("tab"));
       }
-      if(localStorage.getItem("nav")){
-        this.nav=parseInt(localStorage.getItem("nav"));
-      }
     }
   },
   methods: {

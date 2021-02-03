@@ -12,6 +12,7 @@ export default new Vuex.Store({
     drawer: true,
     tab: 0,
     nav: 0,
+    settingsTab: 0,
   },
   mutations: {
     authorization (state){
@@ -34,7 +35,10 @@ export default new Vuex.Store({
     },
     updateNav(state, nav){
       state.nav=nav;
-    }
+    },
+    updateSettingsTab(state, tab){
+      state.settingsTab=tab;
+    },
   },
   getters: {
     getIsAuth: state => {
@@ -57,7 +61,10 @@ export default new Vuex.Store({
     },
     getNav: state =>{
       return state.nav;
-    }
+    },
+    getSettingsTab: state =>{
+      return state.settingsTab;
+    },
   },
   actions: {
   },

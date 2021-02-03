@@ -87,7 +87,7 @@ export default {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: this.email, password: this.password })
         };
-        const response = await fetch("http://192.168.8.42:1920/auth/login", requestOptions);
+        const response = await fetch("http://localhost:1920/auth/login", requestOptions);
         const data = await response.json();
         //document.getElementById("feedback").innerHTML = JSON.stringify(data);
         if(data.error) {

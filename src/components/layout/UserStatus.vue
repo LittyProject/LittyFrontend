@@ -8,7 +8,11 @@
               v-bind="attrs"
               v-on="on"
           >
-            <v-tooltip bottom>
+            <v-tooltip
+                bottom
+                :offset-y="y"
+                :offset-x="x"
+            >
               <template v-slot:activator="{ on, attrs }">
                 <div
                     v-bind="attrs"
@@ -18,8 +22,8 @@
                       right
                       :color="color"
                       style="z-index: 1"
-                      offset-y="19"
-                      offset-x="-35"
+                      :offset-y="y"
+                      :offset-x="x"
                   >
                   </v-badge>
                 </div>
@@ -38,8 +42,8 @@
                 right
                 :color="color"
                 style="z-index: 3"
-                offset-y="19"
-                offset-x="-35"
+                :offset-y="y"
+                :offset-x="x"
             >
             </v-badge>
           </button>
@@ -79,11 +83,17 @@ export default {
   data(){
     return {
       color: "",
+      y: 19,
+      x: -35,
       customStatus: "",
       status: 0,
       type: ''
     }
   },
+  props: [
+    'offsetx',
+    'offsety'
+  ],
   sockets: {
     updateCustomStatus: function (data){
       if(data.status){
@@ -133,9 +143,23 @@ export default {
       }
     }
   },
+  created() {
+    if(this.offsetx){
+      this.x=this.offsetx;
+    }
+    if(this.offsety) {
+      this.y = this.offsety;
+    }
+  },
   mounted() {
     let i = JSON.parse(localStorage.getItem("user"));
     this.status=i.status;
+    if(this.offsetx){
+      this.x=this.offsetx;
+    }
+    if(this.offsety) {
+      this.y = this.offsety;
+    }
     this.color=utils.parseStatusToColor(this.status);
     if(this.status>4){
       this.customStatus=i.customStatus;
