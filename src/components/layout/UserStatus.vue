@@ -148,6 +148,33 @@ export default {
         case 5:
           this.type="Czyta";
           return;
+        case 6:
+          this.type="Uczy się";
+          return;
+        case 7:
+          this.type="Robi zakupy w";
+          return;
+        case 8:
+          this.type="Hackuje";
+          return;
+        case 9:
+          this.type="Śpiewa";
+          return;
+        case 10:
+          this.type="Gra w";
+          return;
+        case 11:
+          this.type="Ogląda";
+          return;
+        case 12:
+          this.type="Słucha";
+          return;
+        case 13:
+          this.type="Rywalizuje";
+          return;
+        case 14:
+          this.type="Ćwiczy";
+          return;
         default:
           this.type="Coś robi w";
           return;
