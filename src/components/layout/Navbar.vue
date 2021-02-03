@@ -89,7 +89,7 @@
 
             <v-list-item-content class="dark-content">
               <v-list-item-title
-              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> 13 <div class="ml-2 dot-grey"></div> 13</span></v-list-item-title>
+              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ server.members.filter(x => x.status != 0).length }} <div class="ml-2 dot-grey"></div> {{ server.members.length }}</span></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -236,11 +236,21 @@ export default {
       login: false
     }
   },
-  mounted() {
+  async mounted() {
     if(localStorage.getItem("token")){
       this.login=true;
       this.user=JSON.parse(localStorage.getItem("user"));
-      this.servers=this.user.servers;
+      this.servers = [];
+      console.log(this.user.servers);
+      this.user.servers.forEach(async (serverId) => {
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "Authorization": `BEARER ${this.user.token}` }
+        };
+        const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions);
+        const data = await response.json();
+        this.servers.push(data);
+      })
     }
   },
   methods: {

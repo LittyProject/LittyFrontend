@@ -32,7 +32,9 @@ export default {
     },
     createServer: function (data) {
       console.log(data);
-
+      let a = JSON.parse(localStorage.getItem("user"));
+      a.servers.push(data.id);
+      localStorage.setItem("user", JSON.stringify(a));
     },
     authenticated: function (data){
       console.log(data);
