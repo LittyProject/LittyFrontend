@@ -21,7 +21,7 @@
         <v-card-text>
           <v-container>
             <v-select
-                :items="[{text: 'Programuje', value: '4'}, {text: 'Czyta', value: '5'}]"
+                :items="[{text: 'Programuje', value: '4'}, {text: 'Czyta', value: '5'}, {text: 'Uczy się', value: '6'}, {text: 'Robi zakupy', value: '7'}, {text: 'Hackuje', value: '8'}, {text: 'Śpiewa', value: '9'}, {text: 'Gra', value: '10'}, {text: 'Ogląda', value: '11'}, {text: 'Słucha', value: '12'}, {text: 'Rywalizuje', value: '13'}, {text: 'Ćwiczy', value: '14'}]"
                 label="Typ"
                 v-model="stateType"
                 required
