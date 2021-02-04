@@ -26,6 +26,29 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <!-- Cannot read property '$store' of undefined -->
+      <!-- <v-list-item
+        v-for="channel in this.$store.getters.getActive.data.channels"
+        :key="channel.name"
+        link
+        class="dark-list pa-1"
+      >
+        <v-list-item-icon>
+          <v-avatar size="35">
+            <v-icon
+                :color="colors.white"
+                medium
+                class="ml-3 dark-btn"
+            >
+              {{ this.$store.getters.getActive.currentChannel != null ? "mdi-message" : "mdi-message-outline" }}
+            </v-icon>
+          </v-avatar>
+        </v-list-item-icon>
+
+        <v-list-item-content @click="setActive({type: 1, id: this.$store.getters.getActive.data.id, data: this.$store.getters.getActive.data, currentChannel: channel})" class="dark-content">
+          ><h3 class="dark-content">{{ channel.name }}</h3>
+        </v-list-item-content>
+      </v-list-item> -->
     </v-navigation-drawer>
     <v-btn @click="switchMenu">Rozwiń menu</v-btn>
   </div>
@@ -48,11 +71,7 @@ export default {
   },
   methods:{
     switchMenu(){
-      if(this.drawer){
-        this.drawer=false;
-      }else{
-        this.drawer=true;
-      }
+      this.drawer = !this.drawer;
     }
   }
 }
