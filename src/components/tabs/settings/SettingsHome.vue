@@ -164,7 +164,7 @@ import colors from '@/assets/colors.json';
 import UserStatus from "@/components/layout/UserStatus";
 
 export default {
-  name: "SettingsHomes",
+  name: "SettingsHome",
   props: [
       'user'
   ],

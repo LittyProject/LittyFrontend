@@ -59,12 +59,28 @@ export default {
     },
     updateCustomStatus: function (data){
       let a = JSON.parse(localStorage.getItem("user"));
+      let s = this.$store.getters.getServersData;
       if(data.status){
+        for(let c in s){
+          s[c].members.map(b=>{
+            if(b.id===a.id){
+              b.status=data.status;
+            }
+          });
+        }
         a.status=data.status;
       }
       if(data.customStatus){
+        for(let c in s){
+          s[c].members.map(b=>{
+            if(b.id===a.id){
+              b.customStatus=data.customStatus;
+            }
+          });
+        }
         a.customStatus=data.customStatus;
       }
+      this.$store.commit("updateServersData", s);
       this.$store.commit("updateUser", a);
       localStorage.setItem("user", JSON.stringify(a));
     }

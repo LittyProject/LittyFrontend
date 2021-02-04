@@ -12,6 +12,7 @@
     "register-service-worker": "^1.7.1",
     "socket.io-client": "^3.1.0",
     "vue": "^2.6.11",
+    "vue-emoji-picker": "^1.0.1",
     "vue-router": "^3.2.0",
     "vue-socket.io": "^3.0.10",
     "vue-socket.io-extended": "^4.0.6",
