@@ -45,7 +45,10 @@ const routes = [
     beforeEnter(to, from, next) {
       if(localStorage.getItem("token")) localStorage.removeItem("token");
       if(localStorage.getItem("user")) localStorage.removeItem("user");
-      return next(vm => vm.$router.push({ name: 'About' }));
+      if(localStorage.getItem("servers")) localStorage.removeItem("servers");
+      if(localStorage.getItem("nav")) localStorage.removeItem("nav");
+      if(localStorage.getItem("tab")) localStorage.removeItem("tab");
+      return next(vm => vm.$router.push({ name: 'Home' }));
     },
     component: () => import('../views/Home.vue')
   },

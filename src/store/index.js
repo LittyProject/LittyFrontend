@@ -13,6 +13,8 @@ export default new Vuex.Store({
     tab: 0,
     nav: 0,
     settingsTab: 0,
+    active: {},
+    servers: {},
   },
   mutations: {
     authorization (state){
@@ -39,6 +41,15 @@ export default new Vuex.Store({
     updateSettingsTab(state, tab){
       state.settingsTab=tab;
     },
+    updateActive(state, active){
+      state.active=active;
+    },
+    updateServers(state, server){
+      state.servers[server.id]=server;
+    },
+    updateServersData(state, server){
+      state.servers=server;
+    }
   },
   getters: {
     getIsAuth: state => {
@@ -64,6 +75,17 @@ export default new Vuex.Store({
     },
     getSettingsTab: state =>{
       return state.settingsTab;
+    },
+    getActive: state =>{
+      return state.active;
+    },
+    getServer: state =>{
+      return (id)=>{
+        return state.servers[id];
+      }
+    },
+    getServersData: state =>{
+      return state.servers;
     },
   },
   actions: {

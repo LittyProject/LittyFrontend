@@ -98,9 +98,9 @@
               </v-avatar>
             </v-list-item-icon>
 
-            <v-list-item-content class="dark-content">
+            <v-list-item-content @click="setActive({type: 1, id: server.id, data: server})" class="dark-content">
               <v-list-item-title
-              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ server.members.filter(x => x.status>1).length }} <div class="ml-2 dot-grey"></div>{{ server.members.filter(x => x.status==0||x.status==1).length }}</span></v-list-item-title>
+              ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ getServer(server.id).members.filter(x => x.status>1).length }} <div class="ml-2 dot-grey"></div>{{getServer(server.id).members.filter(x => x.status===0||x.status===1).length }}</span></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -232,6 +232,8 @@ import colors from '@/assets/colors.json';
 import Topbar from "@/components/layout/Topbar";
 import UserStatus from "@/components/layout/UserStatus";
 import logo from '../../assets/logo.svg';
+import { mapGetters } from "vuex"
+
 export default {
   name: 'Navbar',
   components: {Topbar, UserStatus},
@@ -277,19 +279,27 @@ export default {
       localStorage.setItem("tab", tab);
       this.$store.commit("updateTab", tab);
       this.tab=tab;
+    },
+    setActive(active){
+      if(active.type===1){
+        this.$store.commit("updateTab", 3);
+      }
+      this.$store.commit("updateActive", active);
     }
   },
   sockets:{
     updateCustomStatus: function (data){
       if(data.status) {
         let u = JSON.parse(localStorage.getItem("user"));
-        this.servers.map(a=>{
-          a.members.map(x => {
-            if(x.id===u.id){
-              x.status=data.status;
+        let s = this.$store.getters.getServersData;
+        for(let a in s){
+          s[a].members.map(b=>{
+            if(b.id===u.id){
+              b.status=data.status;
             }
-          })
-        });
+          });
+        }
+        this.$store.commit("updateServersData", s);
       }
     }
   },
@@ -314,7 +324,8 @@ export default {
       get() {
         return this.$store.getters.getUser;
       },
-    }
+    },
+    ...mapGetters(['getServer'])
   }
 }
 

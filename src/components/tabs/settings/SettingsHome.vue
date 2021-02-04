@@ -26,7 +26,8 @@
           <v-icon left>
             {{badge.icon}}
           </v-icon>
-          <b>{{badge.text}}</b>
+          <b v-if="!badge.link">{{badge.text}}</b>
+          <b role="button" v-else @click="openNewTab(badge.link)">{{badge.text}}</b>
         </v-chip>
       </div>
       </div>
@@ -175,7 +176,7 @@ export default {
       changePasswordSwitched: false,
       badge:[
         {text: "Staff", icon: "mdi-wrench", color: "red"},
-        {text: "Zweryfikowany", icon: "mdi-check-circle", color: "blue"}
+        {text: "Zweryfikowany", icon: "mdi-check-circle", color: "blue", link: "https://dlist.top/"}
       ]
     }
   },
@@ -189,6 +190,9 @@ export default {
       }else{
         this.changePasswordSwitched=true;
       }
+    },
+    openNewTab(link){
+      window.open(link);
     }
   }
 }

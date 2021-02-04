@@ -17,6 +17,7 @@
       <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
       <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
       <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
+      <ServerHome v-if="this.$store.getters.getTab===3&&this.$store.getters.getActive.type===1" login="true"></ServerHome>
     </div>
   </div>
 </template>
@@ -25,10 +26,11 @@
 import HomeApp from "@/components/tabs/HomeApp";
 import DirectMessage from "@/components/tabs/DirectMessage";
 import Settings from "@/components/tabs/Settings";
+import ServerHome from "@/components/tabs/server/ServerHome";
 
 export default {
   name: "WebApp",
-  components: {HomeApp, DirectMessage, Settings},
+  components: {HomeApp, DirectMessage, Settings, ServerHome},
   data(){
     return{
       tab: 0,
@@ -87,6 +89,7 @@ export default {
         const data = await response.json();
         servers.push(data);
     }));
+    servers.forEach(a=> this.$store.commit("updateServers", a));
     localStorage.setItem("servers", JSON.stringify(servers));
     if (!this.$socket.connected) {
       this.$socket.connect();

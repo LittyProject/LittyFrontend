@@ -25,11 +25,32 @@
         </v-btn>
       </div>
       <div v-else>
-        <v-btn
-            @click="$router.push( {name: 'WebApp'})"
-        >
-          Otwórz aplikacje
-        </v-btn>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <div
+                dark
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-avatar
+                size="30"
+              >
+                <img :src="user.avatarURL">
+              </v-avatar> {{user.username}}#{{user.tag}}
+            </div>
+          </template>
+          <v-list
+              dark
+          >
+            <v-list-item role="button">
+              <v-list-item-title @click="$router.push( {name: 'WebApp'})">Otwórz aplikacje</v-list-item-title>
+            </v-list-item>
+            <v-spacer></v-spacer>
+            <v-list-item role="button">
+              <v-list-item-title class="red--text" @click="$router.push( {name: 'Logout'})">Wyloguj</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
     </v-toolbar>
     <div class="bg-1" style="width: 100%; height: 400px; padding: 15px;">
