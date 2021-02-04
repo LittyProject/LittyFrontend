@@ -41,6 +41,8 @@ export default {
     setTab(tab) {
       localStorage.setItem("tab", tab);
       this.$store.commit("updateTab", tab);
+      localStorage.setItem("nav", tab);
+      this.$store.commit("updateNav", 0);
     },
   }
 }

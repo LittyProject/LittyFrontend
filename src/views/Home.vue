@@ -7,7 +7,7 @@
       <v-toolbar-title><v-img
           max-height="40"
           max-width="40"
-          src="/img/logo.8ab74eac.svg"
+          src="@/assets/logo.svg"
           dark
           class="d-inline-block"
       ></v-img></v-toolbar-title>
@@ -57,7 +57,7 @@
       <v-img
           max-height="150"
           max-width="150"
-          src="/img/logo.8ab74eac.svg"
+          src="@/assets/logo.svg"
           dark
           class="d-inline-block"
       ></v-img>
@@ -75,7 +75,7 @@
         <v-img
             max-height="350"
             max-width="350"
-            src="/img/littyStatusy.0e51ba1f.gif"
+            src="@/assets/littyStatusy.gif"
             dark
             class="d-inline-block"
         ></v-img>
