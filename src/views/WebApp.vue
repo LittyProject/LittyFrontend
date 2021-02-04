@@ -63,7 +63,7 @@ export default {
       if(data.status){
         for(let c in s){
           s[c].members.map(b=>{
-            if(b.id===a.id){
+            if(b.id===data.id){
               b.status=data.status;
             }
           });
@@ -73,7 +73,7 @@ export default {
       if(data.customStatus){
         for(let c in s){
           s[c].members.map(b=>{
-            if(b.id===a.id){
+            if(b.id===data.id){
               b.customStatus=data.customStatus;
             }
           });
@@ -81,8 +81,10 @@ export default {
         a.customStatus=data.customStatus;
       }
       this.$store.commit("updateServersData", s);
-      this.$store.commit("updateUser", a);
-      localStorage.setItem("user", JSON.stringify(a));
+      if(a.id===data.id){
+        this.$store.commit("updateUser", a);
+        localStorage.setItem("user", JSON.stringify(a));
+      }
     }
   },
   async mounted() {

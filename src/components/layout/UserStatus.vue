@@ -96,49 +96,52 @@ export default {
   ],
   sockets: {
     updateCustomStatus: function (data){
-      if(data.status){
-        this.color=utils.parseStatusToColor(data.status);
-        this.status=parseInt(data.status);
-      }
-      if(data.customStatus&&data.status&&parseInt(this.status)>4){
-        this.customStatus=data.customStatus;
-        switch (parseInt(data.status)){
-          case 5:
-            this.type="Programuje w";
-            return;
-          case 6:
-            this.type="Czyta";
-            return;
-          case 7:
-            this.type="Uczy się";
-            return;
-          case 8:
-            this.type="Robi zakupy w";
-            return;
-          case 9:
-            this.type="Hackuje";
-            return;
-          case 10:
-            this.type="Śpiewa";
-            return;
-          case 11:
-            this.type="Gra w";
-            return;
-          case 12:
-            this.type="Ogląda";
-            return;
-          case 13:
-            this.type="Słucha";
-            return;
-          case 14:
-            this.type="Rywalizuje";
-            return;
-          case 15:
-            this.type="Ćwiczy";
-            return;
-          default:
-            this.type="Coś robi w";
-            return;
+      let a = JSON.parse(localStorage.getItem("user"));
+      if(a.id===data.id){
+        if(data.status){
+          this.color=utils.parseStatusToColor(data.status);
+          this.status=parseInt(data.status);
+        }
+        if(data.customStatus&&data.status&&parseInt(this.status)>4){
+          this.customStatus=data.customStatus;
+          switch (parseInt(data.status)){
+            case 5:
+              this.type="Programuje w";
+              return;
+            case 6:
+              this.type="Czyta";
+              return;
+            case 7:
+              this.type="Uczy się";
+              return;
+            case 8:
+              this.type="Robi zakupy w";
+              return;
+            case 9:
+              this.type="Hackuje";
+              return;
+            case 10:
+              this.type="Śpiewa";
+              return;
+            case 11:
+              this.type="Gra w";
+              return;
+            case 12:
+              this.type="Ogląda";
+              return;
+            case 13:
+              this.type="Słucha";
+              return;
+            case 14:
+              this.type="Rywalizuje";
+              return;
+            case 15:
+              this.type="Ćwiczy";
+              return;
+            default:
+              this.type="Coś robi w";
+              return;
+          }
         }
       }
     }

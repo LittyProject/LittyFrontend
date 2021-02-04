@@ -290,14 +290,23 @@ export default {
   sockets:{
     updateCustomStatus: function (data){
       if(data.status) {
-        let u = JSON.parse(localStorage.getItem("user"));
         let s = this.$store.getters.getServersData;
         for(let a in s){
           s[a].members.map(b=>{
-            if(b.id===u.id){
+            if(b.id===data.id){
               b.status=data.status;
             }
           });
+        }
+        if(data.customStatus) {
+          let s = this.$store.getters.getServersData;
+          for (let a in s) {
+            s[a].members.map(b => {
+              if (b.id === data.id) {
+                b.customStatus = data.customStatus;
+              }
+            });
+          }
         }
         this.$store.commit("updateServersData", s);
       }

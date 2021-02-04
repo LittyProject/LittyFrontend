@@ -17,7 +17,7 @@
               <h2>Dostępni</h2>
             </v-list-item-title>
             <v-list-item
-                v-for="member in getServer(this.getActive().id).members.filter(x => x.status>1)"
+                v-for="member in members.filter(x => x.status>1)"
                 :key="member.id"
                 class="pa-3"
             >
@@ -72,7 +72,7 @@
               <h2>Offline</h2>
             </v-list-item-title>
             <v-list-item
-                v-for="member in getServer(this.getActive().id).members.filter(x => x.status===0||x.status===1)"
+                v-for="member in members.filter(x => x.status===0||x.status===1)"
                 :key="member.id"
                 class="pa-3"
             >
@@ -137,7 +137,8 @@ export default {
   data(){
     return {
       colors,
-      utils
+      utils,
+      members: [],
     }
   },
   computed:{
@@ -147,7 +148,15 @@ export default {
     getActive(){
       return this.$store.getters.getActive;
     },
-  }
+  },
+  created() {
+    this.members=this.getServer(this.getActive().id).members;
+  },
+  sockets:{
+    updateCustomStatus(){
+      this.members=this.getServer(this.getActive().id).members;
+    }
+  },
 }
 </script>
 
