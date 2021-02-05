@@ -94,10 +94,10 @@ export default {
           this.error="Wprowadzono błędne dane spróbuj ponownie"
         } else {
           if(!this.$store.getters.getIsAuth) this.$store.commit("authorization");
-          this.$store.commit("updateToken", data.token);
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data));
-          this.$store.commit("updateUser", data);
+          this.$store.dispatch("setToken", data.token);
+          this.$store.dispatch("setUser", data);
           await this.$router.push({name: "WebApp"});
         }
         return false;

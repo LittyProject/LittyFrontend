@@ -1,30 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import user from "./modules/userModule";
+import server from "./modules/serverModule";
+import gateway from "./modules/gatewayModule";
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     isAuthorized: false,
-    token: null,
-    user: {},
     socket: null,
     drawer: true,
     tab: 0,
     nav: 0,
     settingsTab: 0,
     active: {},
-    servers: {},
   },
   mutations: {
     authorization (state){
       state.isAuthorized = !state.isAuthorized;
-    },
-    updateToken (state, token) {
-      state.token = token;
-    },
-    updateUser (state, user) {
-      state.user = user;
     },
     setSocket (state, socket) {
       state.socket = socket;
@@ -44,9 +38,6 @@ export default new Vuex.Store({
     updateActive(state, active){
       state.active=active;
     },
-    updateServers(state, server){
-      state.servers[server.id]=server;
-    },
     updateServersData(state, server){
       state.servers=server;
     }
@@ -54,12 +45,6 @@ export default new Vuex.Store({
   getters: {
     getIsAuth: state => {
       return state.isAuthorized;
-    },
-    getUser: state => {
-      return state.user;
-    },
-    getServers: state => {
-      return state.user.servers;
     },
     getToken: state => {
       return state.socket
@@ -79,17 +64,12 @@ export default new Vuex.Store({
     getActive: state =>{
       return state.active;
     },
-    getServer: state =>{
-      return (id)=>{
-        return state.servers[id];
-      }
-    },
-    getServersData: state =>{
-      return state.servers;
-    },
   },
   actions: {
   },
   modules: {
+    user,
+    server,
+    gateway
   }
 })

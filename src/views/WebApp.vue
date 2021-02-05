@@ -14,6 +14,7 @@
       <h3 class="mt-10">Ładowanie aplikacji...</h3>
     </div>
     <div v-else>
+      <v-snackbar>elo</v-snackbar>
       <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
       <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
       <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
@@ -44,49 +45,6 @@ export default {
       this.tab=tab;
     }
   },
-  sockets: {
-    connect: function () {
-      this.$socket.emit('authentication', {token: localStorage.getItem("token")});
-    },
-    createServer: function (data) {
-      console.log(data);
-      let a = JSON.parse(localStorage.getItem("user"));
-      a.servers.push(data.id);
-      localStorage.setItem("user", JSON.stringify(a));
-    },
-    authenticated: function (data){
-      console.log(data);
-    },
-    updateCustomStatus: function (data){
-      let a = JSON.parse(localStorage.getItem("user"));
-      let s = this.$store.getters.getServersData;
-      if(data.status){
-        for(let c in s){
-          s[c].members.map(b=>{
-            if(b.id===data.id){
-              b.status=data.status;
-            }
-          });
-        }
-        a.status=data.status;
-      }
-      if(data.customStatus){
-        for(let c in s){
-          s[c].members.map(b=>{
-            if(b.id===data.id){
-              b.customStatus=data.customStatus;
-            }
-          });
-        }
-        a.customStatus=data.customStatus;
-      }
-      this.$store.commit("updateServersData", s);
-      if(a.id===data.id){
-        this.$store.commit("updateUser", a);
-        localStorage.setItem("user", JSON.stringify(a));
-      }
-    }
-  },
   async mounted() {
     if(!localStorage.getItem("token")){
       return await this.$router.push({name: "Login"});
@@ -95,8 +53,14 @@ export default {
       this.tab=parseInt(localStorage.getItem("tab"));
       this.$store.commit("updateTab", parseInt(localStorage.getItem("tab")));
     }
-    let user = JSON.parse(localStorage.getItem("user"));
-    let servers = [];
+    let user = {};
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "Authorization": `BEARER ${localStorage.getItem("token")}` }
+    };
+    const response = await fetch("http://localhost:1920/users/@me", requestOptions);
+    user=await response.json();
+    let servers = {};
     await Promise.all(
         user.servers.map(async (serverId) => {
         const requestOptions = {
@@ -105,27 +69,29 @@ export default {
         };
         const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions);
         const data = await response.json();
-        servers.push(data);
+        servers[data.id]=data;
     }));
-    servers.forEach(a=> this.$store.commit("updateServers", a));
     localStorage.setItem("servers", JSON.stringify(servers));
-    if (!this.$socket.connected) {
-      this.$socket.connect();
-      setTimeout(() => {
-        this.$socket.emit('authentication', {token: localStorage.getItem("token")});
-      }, 1000);
+    await this.$store.dispatch("setToken", user.token);
+    await this.$store.dispatch("setUser", user);
+    await this.$store.dispatch("setServers", servers);
+    // setTimeout(() => {
+    //   setInterval(() => {
+    //     if (!this.$socket.connected) {
+    //       this.$socket.connect();
+    //       setTimeout(() => {
+    //         this.$socket.emit('authentication', {token: localStorage.getItem("token")});
+    //       }, 1000);
+    //     }
+    //   }, 6000);
+    // }, 10000);
+    this.$socket.emit('authentication', {token: localStorage.getItem("token")});
+    if(this.$store.getters.isConnected){
+      this.load=true;
+    }else{
+      this.load=false;
     }
-    setTimeout(() => {
-      setInterval(() => {
-        if (!this.$socket.connected) {
-          this.$socket.connect();
-          setTimeout(() => {
-            this.$socket.emit('authentication', {token: localStorage.getItem("token")});
-          }, 1000);
-        }
-      }, 6000);
-    }, 10000);
-    this.load=true;
+    console.log(this.$store.getters.getSocketMessage);
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <ServerNavbar></ServerNavbar>
-    <ServerChannel v-if="getActive().currentChannel"></ServerChannel>
+    <ServerChannel v-if="this.channel"></ServerChannel>
     <div v-else>
       <Topbar icon="mdi-account-group" name="Lista członków serwera"/>
       <v-row
@@ -17,7 +17,7 @@
               <h2>Dostępni</h2>
             </v-list-item-title>
             <v-list-item
-                v-for="member in members.filter(x => x.status>1)"
+                v-for="member in server.members.filter(x => x.status>1)"
                 :key="member.id"
                 class="pa-3"
             >
@@ -49,7 +49,7 @@
               <div class="d-block ml-2">
             <span class="d-block">
               <v-icon
-                  v-if="getServer(getActive().id).ownerId===member.id"
+                  v-if="server.ownerId===member.id"
                   color="warning"
                   size="22"
                   class="mr-1"
@@ -72,7 +72,7 @@
               <h2>Offline</h2>
             </v-list-item-title>
             <v-list-item
-                v-for="member in members.filter(x => x.status===0||x.status===1)"
+                v-for="member in server.members.filter(x => x.status===0||x.status===1)"
                 :key="member.id"
                 class="pa-3"
             >
@@ -104,7 +104,7 @@
               <div class="d-block ml-2">
             <span class="d-block">
               <v-icon
-                  v-if="getServer(getActive().id).ownerId===member.id"
+                  v-if="server.ownerId===member.id"
                   color="warning"
                   size="22"
                   class="mr-1"
@@ -124,7 +124,6 @@
 
 <script>
 
-import { mapGetters } from "vuex"
 import ServerNavbar from "@/components/layout/ServerNavbar";
 import Topbar from "@/components/layout/Topbar";
 import ServerChannel from "@/components/tabs/server/ServerChannel";
@@ -138,26 +137,26 @@ export default {
     return {
       colors,
       utils,
-      members: [],
     }
   },
   computed:{
-    ...mapGetters(['getServer'])
-  },
-  methods:{
-    getActive(){
-      return this.$store.getters.getActive;
+    server: {
+      get() {
+        return this.$store.getters.getCurrentServer;
+      },
+      set(server) {
+        this.$store.dispatch("setServer", server);
+      }
     },
-  },
-  created() {
-    this.members=this.getServer(this.getActive().id).members;
-  },
-  sockets:{
-    updateCustomStatus(){
-      this.members=this.getServer(this.getActive().id).members;
+    channel: {
+      get() {
+        return this.$store.getters.getCurrentChannel;
+      }
     }
   },
 }
+
+
 </script>
 
 <style scoped>

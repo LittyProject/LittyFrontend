@@ -3,7 +3,7 @@
   <div>
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
-        <div v-if="parseInt(status)>4">
+        <div v-if="user.status>4">
           <button
               v-bind="attrs"
               v-on="on"
@@ -20,7 +20,7 @@
                 >
                   <v-badge
                       right
-                      :color="color"
+                      :color="utils.parseStatusToColor(user.status)"
                       style="z-index: 1"
                       :offset-y="y"
                       :offset-x="x"
@@ -28,7 +28,7 @@
                   </v-badge>
                 </div>
               </template>
-              <span><strong>{{type}}</strong> {{customStatus}}</span>
+              <span v-html="utils.parseStatus(user)"></span>
             </v-tooltip>
           </button>
           <slot></slot>
@@ -40,7 +40,7 @@
           >
             <v-badge
                 right
-                :color="color"
+                :color="utils.parseStatusToColor(user.status)"
                 style="z-index: 3"
                 :offset-y="y"
                 :offset-x="x"
@@ -85,67 +85,13 @@ export default {
       color: "",
       y: 19,
       x: -35,
-      customStatus: "",
-      status: 0,
-      type: ''
+      utils
     }
   },
   props: [
     'offsetx',
     'offsety'
   ],
-  sockets: {
-    updateCustomStatus: function (data){
-      let a = JSON.parse(localStorage.getItem("user"));
-      if(a.id===data.id){
-        if(data.status){
-          this.color=utils.parseStatusToColor(data.status);
-          this.status=parseInt(data.status);
-        }
-        if(data.customStatus&&data.status&&parseInt(this.status)>4){
-          this.customStatus=data.customStatus;
-          switch (parseInt(data.status)){
-            case 5:
-              this.type="Programuje w";
-              return;
-            case 6:
-              this.type="Czyta";
-              return;
-            case 7:
-              this.type="Uczy się";
-              return;
-            case 8:
-              this.type="Robi zakupy w";
-              return;
-            case 9:
-              this.type="Hackuje";
-              return;
-            case 10:
-              this.type="Śpiewa";
-              return;
-            case 11:
-              this.type="Gra w";
-              return;
-            case 12:
-              this.type="Ogląda";
-              return;
-            case 13:
-              this.type="Słucha";
-              return;
-            case 14:
-              this.type="Rywalizuje";
-              return;
-            case 15:
-              this.type="Ćwiczy";
-              return;
-            default:
-              this.type="Coś robi w";
-              return;
-          }
-        }
-      }
-    }
-  },
   created() {
     if(this.offsetx){
       this.x=this.offsetx;
@@ -163,53 +109,17 @@ export default {
     if(this.offsety) {
       this.y = this.offsety;
     }
-    this.color=utils.parseStatusToColor(this.status);
-    if(this.status>4){
-      this.customStatus=i.customStatus;
-      switch (this.status){
-        case 5:
-          this.type="Programuje w";
-          return;
-        case 6:
-          this.type="Czyta";
-          return;
-        case 7:
-          this.type="Uczy się";
-          return;
-        case 8:
-          this.type="Robi zakupy w";
-          return;
-        case 9:
-          this.type="Hackuje";
-          return;
-        case 10:
-          this.type="Śpiewa";
-          return;
-        case 11:
-          this.type="Gra w";
-          return;
-        case 12:
-          this.type="Ogląda";
-          return;
-        case 13:
-          this.type="Słucha";
-          return;
-        case 14:
-          this.type="Rywalizuje";
-          return;
-        case 15:
-          this.type="Ćwiczy";
-          return;
-        default:
-          this.type="Coś robi w";
-          return;
-      }
-    }
   },
   methods:{
     setStatus(status){
-      console.log(status);
       this.$socket.emit('updateCustomStatus', {status: status});
+    }
+  },
+  computed:{
+    user:{
+      get(){
+        return this.$store.getters.getUser;
+      }
     }
   }
 }
