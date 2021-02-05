@@ -20,11 +20,24 @@
       <v-btn @click="init" v-if="error" outlined color="success" class="mt-16">Spróbuj ponownie</v-btn>
     </div>
     <div v-else>
-      <v-snackbar>elo</v-snackbar>
-      <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
-      <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
-      <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
-      <ServerHome v-if="this.$store.getters.getTab===3&&this.$store.getters.getActive.type===1" login="true"></ServerHome>
+      <div v-if="this.$store.getters.isConnected">
+        <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
+        <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
+        <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
+        <ServerHome v-if="this.$store.getters.getTab===3&&this.$store.getters.getActive.type===1" login="true"></ServerHome>
+      </div>
+      <div v-else class="text-center">
+        <v-icon class="mt-16" :size="120" color="red">
+          mdi-alert
+        </v-icon>
+        <h1 class="mt-2">Litty</h1>
+        <div class="mt-10 mb-16" style="background-color: #414551; height: 4px; width: 90%; margin-left: 5%"></div>
+        <h2 class="mt-16 mb-16 pt-16">Nie można nawiązać połączenia z serwerem Litty</h2>
+        <v-btn @click="init" outlined color="success" class="mt-5">Spróbuj ponownie</v-btn>
+        <div style="padding-top:5%;display: table;text-align: center;margin-left: auto;margin-right: auto;">
+          <b><a>Zgłoś problem</a></b>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,40 +64,41 @@ export default {
       this.$store.commit("updateTab", tab);
       this.tab=tab;
     },
-    async init(){
-      this.load=false;
+    async init(load){
+      if(load)this.load=false;
       this.error=false;
       if(!localStorage.getItem("token")){
         return await this.$router.push({name: "Login"});
       }
-      this.$socket.emit('authentication', {token: localStorage.getItem("token")});
-      console.log(this.$store.getters.getSocketMessage);
       if(localStorage.getItem("tab")) {
         this.tab=parseInt(localStorage.getItem("tab"));
         this.$store.commit("updateTab", parseInt(localStorage.getItem("tab")));
       }
-      let user = {};
-      const requestOptions = {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "Authorization": `BEARER ${localStorage.getItem("token")}` }
-      };
-      const response = await fetch("http://localhost:1920/users/@me", requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o użytkowniku")});
-      user=await response.json();
-      let servers = {};
-      await Promise.all(
-          user.servers.map(async (serverId) => {
-            const requestOptions = {
-              method: "GET",
-              headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
-            };
-            const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o serwerze")});
-            const data = await response.json();
-            servers[data.id]=data;
-          }));
-      localStorage.setItem("servers", JSON.stringify(servers));
-      await this.$store.dispatch("setToken", user.token);
-      await this.$store.dispatch("setUser", user);
-      await this.$store.dispatch("setServers", servers);
+      if(load){
+        let user = {};
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "Authorization": `BEARER ${localStorage.getItem("token")}` }
+        };
+        const response = await fetch("http://localhost:1920/users/@me", requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o użytkowniku")});
+        user=await response.json();
+        let servers = {};
+        await Promise.all(
+            user.servers.map(async (serverId) => {
+              const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
+              };
+              const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o serwerze")});
+              const data = await response.json();
+              servers[data.id]=data;
+            })
+        );
+        await this.$store.dispatch("setToken", user.token);
+        await this.$store.dispatch("setUser", user);
+        await this.$store.dispatch("setServers", servers);
+      }
+      this.$socket.emit('authentication', {token: localStorage.getItem("token")});
       if(this.$store.getters.isConnected){
         this.load=true;
       }else{
@@ -100,7 +114,7 @@ export default {
     this.$socket.emit('authentication', {token: localStorage.getItem("token")});
   },
   async mounted() {
-    await this.init();
+    await this.init(true);
   }
 }
 </script>

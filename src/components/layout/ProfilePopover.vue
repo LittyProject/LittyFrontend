@@ -4,6 +4,7 @@
       dark
       rounded
       :nudge-width="200"
+      :close-on-content-click="false"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
@@ -15,10 +16,11 @@
     </template>
     <v-card
         dark
+        @contextmenu="show"
     >
       <v-list
           dark
-          class="pa-5"
+          class="pa-3"
       >
         <v-list-item>
           <v-list-item-avatar>
@@ -44,8 +46,10 @@
           <v-list-item-content>
             <v-list-item-title>{{user.username}}#{{user.tag}}</v-list-item-title>
             <v-spacer></v-spacer>
+            <v-list-item-subtitle v-if="user.status<5">{{utils.parseStatus(user)}}</v-list-item-subtitle>
             <v-list-item-subtitle v-if="user.status>=5"><v-icon>{{utils.parseStatusToIcon(user.status)}}</v-icon> <span v-html="utils.parseStatus(user)"></span></v-list-item-subtitle>
           </v-list-item-content>
+          <v-btn outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
@@ -55,22 +59,40 @@
         </v-list-item>
       </v-list>
     </v-card>
+    <UserRightClickMenu :x="x" :y="y" :user="user" :type="1" :showMenu="showMenu"></UserRightClickMenu>
   </v-menu>
 </template>
 
 <script>
-const utils = require('@/utils')
+const utils = require('@/utils');
+import UserRightClickMenu from "@/components/layout/UserRightClickMenu";
+
 export default {
   name: "ProfilePopover",
+  components: {UserRightClickMenu},
   data(){
     return {
       profile: false,
-      utils
+      utils,
+      showMenu: false,
+      x: 0,
+      y: 0,
     }
   },
   props: [
       'user'
-  ]
+  ],
+  methods: {
+    show (e) {
+      e.preventDefault()
+      this.showMenu = false
+      this.x = e.clientX
+      this.y = e.clientY
+      this.$nextTick(() => {
+        this.showMenu = true
+      })
+    }
+  }
 }
 </script>
 

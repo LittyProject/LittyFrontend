@@ -22,4 +22,7 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/main/index.scss";
+$color-pack: false;
+
+@import '~vuetify/src/styles/main.sass';
 </style>

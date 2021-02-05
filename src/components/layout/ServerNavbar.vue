@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @contextmenu="showServer">
     <v-navigation-drawer
         v-model="drawer"
         :color="colors.otherDark"
@@ -76,22 +76,31 @@
           </v-avatar>
         </v-list-item-icon>
 
-        <v-list-item-content @click="set(channel.id)" class="dark-content">
+        <v-list-item-content @contextmenu="show($event, channel)" @click="set(channel.id)" class="dark-content">
           <h3 class="dark-content">{{ channel.name }}</h3>
         </v-list-item-content>
       </v-list-item>
+      <UserRightClickMenu :x="x" :y="y" :type="2" :channel="ch" :showMenu="showMenu"></UserRightClickMenu>
     </v-navigation-drawer>
+    <UserRightClickMenu :x="x" :y="y" :type="3" :server="server" :showMenu="showMenuServer"></UserRightClickMenu>
   </div>
 </template>
 
 <script>
 import colors from '@/assets/colors.json';
+import UserRightClickMenu from "@/components/layout/UserRightClickMenu";
 
 export default {
   name: "ServerNavbar",
+  components: {UserRightClickMenu},
   data(){
     return{
-      colors
+      colors,
+      showMenu: false,
+      showMenuServer: false,
+      x: 0,
+      y: 0,
+      ch: null,
     }
   },
   computed: {
@@ -126,6 +135,25 @@ export default {
     },
     set(id){
       this.$store.dispatch("setCurrentChannelId", id);
+    },
+    show (e, ch) {
+      e.preventDefault()
+      this.showMenu = false;
+      this.x = e.clientX;
+      this.y = e.clientY;
+      this.ch=ch;
+      this.$nextTick(() => {
+        this.showMenu = true
+      })
+    },
+    showServer (e) {
+      e.preventDefault()
+      this.showMenuServer = false;
+      this.x = e.clientX;
+      this.y = e.clientY;
+      this.$nextTick(() => {
+        this.showMenuServer = true
+      })
     }
   },
 }

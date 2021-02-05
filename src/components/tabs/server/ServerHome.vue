@@ -56,7 +56,7 @@
               >
                 mdi-crown
               </v-icon>
-              <strong>{{member.username}}#{{member.tag}}</strong></span>
+              <strong @contextmenu="show($event, member)">{{member.username}}#{{member.tag}}</strong></span>
                 <v-icon small class="d-inline-block">{{utils.parseStatusToIcon(member.status)}}</v-icon> <span class="d-inline-block color-0" v-html="utils.parseStatus(member)"></span>
               </div>
             </v-list-item>
@@ -111,7 +111,7 @@
               >
                 mdi-crown
               </v-icon>
-              <strong>{{member.username}}#{{member.tag}}</strong></span>
+              <strong @contextmenu="show($event, member)">{{member.username}}#{{member.tag}}</strong></span>
                 <span class="d-block color-0" v-html="utils.parseStatus(member)"></span>
               </div>
             </v-list-item>
@@ -119,6 +119,7 @@
         </v-col>
       </v-row>
     </div>
+    <UserRightClickMenu :x="x" :y="y" :user="user" :type="1" :showMenu="showMenu"></UserRightClickMenu>
   </div>
 </template>
 
@@ -127,17 +128,22 @@
 import ServerNavbar from "@/components/layout/ServerNavbar";
 import Topbar from "@/components/layout/Topbar";
 import ProfilePopover from "@/components/layout/ProfilePopover";
+import UserRightClickMenu from "@/components/layout/UserRightClickMenu";
 import ServerChannel from "@/components/tabs/server/ServerChannel";
 import colors from '@/assets/colors.json';
 import utils from '@/utils';
 
 export default {
   name: "ServerHome",
-  components: {ServerChannel, ServerNavbar, Topbar, ProfilePopover},
+  components: {ServerChannel, ServerNavbar, Topbar, ProfilePopover, UserRightClickMenu},
   data(){
     return {
       colors,
       utils,
+      showMenu: false,
+      x: 0,
+      y: 0,
+      user: null,
     }
   },
   computed:{
@@ -155,6 +161,18 @@ export default {
       }
     }
   },
+  methods:{
+    show (e, member) {
+      e.preventDefault()
+      this.showMenu = false;
+      this.x = e.clientX;
+      this.y = e.clientY;
+      this.user=member;
+      this.$nextTick(() => {
+        this.showMenu = true
+      })
+    }
+  }
 }
 
 
