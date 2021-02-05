@@ -39,14 +39,14 @@
                       <v-avatar
                           size="35"
                       >
-                        <img :src="member.avatarURL"/>
+                        <ProfilePopover :user="member"><v-avatar><img :src="member.avatarURL"/></v-avatar></ProfilePopover>
                       </v-avatar>
                     </v-badge>
                   </div>
                 </template>
-                <span v-html="utils.parseStatus(member)"></span>
+                <v-icon>{{utils.parseStatusToIcon(member.status)}}</v-icon> <span v-html="utils.parseStatus(member)"></span>
               </v-tooltip>
-              <div class="d-block ml-2">
+              <div class="d-block ml-4">
             <span class="d-block">
               <v-icon
                   v-if="server.ownerId===member.id"
@@ -57,7 +57,7 @@
                 mdi-crown
               </v-icon>
               <strong>{{member.username}}#{{member.tag}}</strong></span>
-                <span class="d-block color-0" v-html="utils.parseStatus(member)"></span>
+                <v-icon small class="d-inline-block">{{utils.parseStatusToIcon(member.status)}}</v-icon> <span class="d-inline-block color-0" v-html="utils.parseStatus(member)"></span>
               </div>
             </v-list-item>
           </v-list>
@@ -94,7 +94,7 @@
                       <v-avatar
                           size="35"
                       >
-                        <img :src="member.avatarURL"/>
+                        <ProfilePopover :user="member"><v-avatar><img :src="member.avatarURL"/></v-avatar></ProfilePopover>
                       </v-avatar>
                     </v-badge>
                   </div>
@@ -126,13 +126,14 @@
 
 import ServerNavbar from "@/components/layout/ServerNavbar";
 import Topbar from "@/components/layout/Topbar";
+import ProfilePopover from "@/components/layout/ProfilePopover";
 import ServerChannel from "@/components/tabs/server/ServerChannel";
 import colors from '@/assets/colors.json';
 import utils from '@/utils';
 
 export default {
   name: "ServerHome",
-  components: {ServerChannel, ServerNavbar, Topbar},
+  components: {ServerChannel, ServerNavbar, Topbar, ProfilePopover},
   data(){
     return {
       colors,

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Topbar icon="mdi-message" :name="getName()"/>
+    <Topbar icon="mdi-message" :name="channel.name"/>
     <div
       style="position: absolute; bottom: 0; width: 98%; margin-left: 13px;"
     >
       <v-text-field
           v-model="message"
-          :append-icon="icon"
+          :append-icon="channel.icon"
           append-outer-icon="mdi-send"
           prepend-inner-icon="mdi-plus-circle"
           filled
@@ -45,14 +45,21 @@ export default {
     ],
   }),
   computed:{
-    icon () {
-      return this.icons[this.iconIndex]
+    server: {
+      get() {
+        return this.$store.getters.getCurrentServer;
+      },
     },
+    channel: {
+      get() {
+        return this.$store.getters.getCurrentChannel;
+      },
+      set(id) {
+        this.$store.dispatch("setCurrentChannelId", id);
+      }
+    }
   },
   methods:{
-    getName(){
-      return `${this.$store.getters.getActive.currentChannel.name}`;
-    },
     sendMessage () {
       this.resetIcon()
       this.clearMessage()
@@ -68,7 +75,8 @@ export default {
           ? this.iconIndex = 0
           : this.iconIndex++
     },
-  }
+  },
+
 }
 </script>
 

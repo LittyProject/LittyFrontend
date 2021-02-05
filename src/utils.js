@@ -14,6 +14,35 @@ module.exports.parseStatusToColor = (status) =>{
     }
 }
 
+module.exports.parseStatusToIcon = (status) =>{
+    switch (status){
+        case 5:
+            return "mdi-iframe-braces";
+        case 6:
+            return "mdi-book-open-variant";
+        case 7:
+            return "mdi-brain";
+        case 8:
+            return "mdi-cart";
+        case 9:
+            return "mdi-lock-open";
+        case 10:
+            return "mdi-microphone";
+        case 11:
+            return "mdi-google-controller";
+        case 12:
+            return "mdi-movie-open-play";
+        case 13:
+            return "mdi-play-circle";
+        case 14:
+            return "mdi-sword-cross";
+        case 15:
+            return "mdi-weight-lifter"
+        default:
+            return "";
+    }
+}
+
 module.exports.parseStatus = (user) =>{
     switch (user.status){
         case 0:

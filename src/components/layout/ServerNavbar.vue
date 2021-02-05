@@ -39,11 +39,12 @@
               mdi-arrow-left-bold-circle
             </v-icon>
             <v-icon
+                v-if="channel"
                 :color="colors.white"
                 medium
                 title="Lista członków serwera"
                 class="ml-3 dark-btn"
-                @click="channel.set(null)"
+                @click="set(null)"
             >
               mdi-account-group
             </v-icon>
@@ -75,7 +76,7 @@
           </v-avatar>
         </v-list-item-icon>
 
-        <v-list-item-content @click="channel.set(channel.id)" class="dark-content">
+        <v-list-item-content @click="set(channel.id)" class="dark-content">
           <h3 class="dark-content">{{ channel.name }}</h3>
         </v-list-item-content>
       </v-list-item>
@@ -123,6 +124,9 @@ export default {
       this.$store.dispatch("setCurrentServerId", null);
       this.$store.dispatch("setCurrentChannelId", null);
     },
+    set(id){
+      this.$store.dispatch("setCurrentChannelId", id);
+    }
   },
 }
 </script>

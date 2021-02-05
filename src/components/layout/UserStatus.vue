@@ -24,11 +24,15 @@
                       style="z-index: 1"
                       :offset-y="y"
                       :offset-x="x"
+                      overlap
+                      :icon="utils.parseStatusToIcon(user.status)"
                   >
                   </v-badge>
                 </div>
               </template>
-              <span v-html="utils.parseStatus(user)"></span>
+              <div class="d-inline-block">
+                <v-icon small dark>{{utils.parseStatusToIcon(user.status)}}</v-icon> <span v-html="utils.parseStatus(user)"></span>
+              </div>
             </v-tooltip>
           </button>
           <slot></slot>
@@ -90,7 +94,8 @@ export default {
   },
   props: [
     'offsetx',
-    'offsety'
+    'offsety',
+    'popover'
   ],
   created() {
     if(this.offsetx){

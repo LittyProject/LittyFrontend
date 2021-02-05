@@ -18,12 +18,18 @@ const mutations = {
     },
 
     SOCKET_updateCustomStatus(state, data) {
+        console.log(data);
         if(data.server){
-            if(data.status) {
+            if(data.status&&data.customStatus) {
                 this.dispatch("memberStatusUpdate", {server: data.server, id: data.id, status: data.status});
-            }
-            if(data.customStatus) {
                 this.dispatch("memberCustomStatusUpdate", {server: data.server, id: data.id, customStatus: data.customStatus});
+            }else{
+                if(data.status) {
+                    this.dispatch("memberStatusUpdate", {server: data.server, id: data.id, status: data.status});
+                }
+                if(data.customStatus) {
+                    this.dispatch("memberCustomStatusUpdate", {server: data.server, id: data.id, customStatus: data.customStatus});
+                }
             }
         }else{
             this.dispatch("updateUser", data);
