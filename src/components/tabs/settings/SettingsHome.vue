@@ -15,7 +15,7 @@
       <h2 class="mt-2">{{user.username}}<span>#{{user.tag}}</span></h2>
       <div class="mt-5">
         <v-chip
-            v-for="badge in badge"
+            v-for="badge in user.badges"
             :key="badge.text"
             class="ma-2"
             :color="badge.color"
@@ -35,23 +35,40 @@
       <h1>Moje konto</h1>
       <form
           class="pa-2 mt-5"
+          @submit="editUserData"
       >
+        <v-alert
+            dense
+            v-if="userdata.error.exist"
+            type="error"
+            dismissible
+        >
+          {{userdata.error.message}}
+        </v-alert>
+        <v-alert
+            dense
+            v-if="userdata.success.exist"
+            type="success"
+            dismissible
+        >
+          {{userdata.success.message}}
+        </v-alert>
         <v-row>
           <v-col>
             <v-text-field
+                v-model="userdata.data.username"
                 label="Nazwa użytkownika"
                 type="text"
                 outlined
-                :value="user.username"
                 dark
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
+                v-model="userdata.data.tag"
                 label="Tag"
                 type="text"
                 outlined
-                :value="user.tag"
                 dark
             ></v-text-field>
           </v-col>
@@ -60,6 +77,7 @@
             label="Email"
             type="email"
             outlined
+            disabled
             dark
         ></v-text-field>
         <v-btn
@@ -68,6 +86,7 @@
             color="success"
             class="mr-2"
             dark
+            @click="editUserData"
         >
           Zapisz
         </v-btn>
@@ -165,19 +184,33 @@ import UserStatus from "@/components/layout/UserStatus";
 
 export default {
   name: "SettingsHome",
-  props: [
-      'user'
-  ],
   components: {UserStatus},
+  computed:{
+    user:{
+      get(){
+        return this.$store.getters.getUser;
+      }
+    }
+  },
   data(){
     return {
+      userdata: {
+        data:{
+          username: this.$store.getters.getUser.username,
+          tag: this.$store.getters.getUser.tag,
+        },
+        error:{
+          exist: false,
+          message: null,
+        },
+        success:{
+          exist: false,
+          message: null
+        }
+      },
       colors,
       dev: false,
       changePasswordSwitched: false,
-      badge:[
-        {text: "Staff", icon: "mdi-wrench", color: "red"},
-        {text: "Zweryfikowany", icon: "mdi-check-circle", color: "blue", link: "https://dlist.top/"}
-      ]
     }
   },
   methods:{
@@ -193,8 +226,27 @@ export default {
     },
     openNewTab(link){
       window.open(link);
+    },
+    async editUserData(){
+      if(!this.userdata.data.username||!this.userdata.data.tag){
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Wypełnij poprawnie formularz";
+        return;
+      }
+      const requestOptions = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Authorization": `BEARER ${localStorage.getItem("token")}` },
+        body: JSON.stringify(this.userdata.data)
+      };
+      await fetch("http://localhost:1920/users/@me/edit", requestOptions).then(()=>{
+        this.userdata.success.exist=true;
+        this.userdata.success.message="Pomyślnie edytowano twoje dane";
+      }).catch(()=>{
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Błędne dane lub użytkownik o tej nazwie i tagu już istnieją";
+      });
     }
-  }
+  },
 }
 </script>
 

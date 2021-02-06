@@ -16,7 +16,20 @@ const mutations = {
         state.isConnected = false;
         state.socketMessage=  "Rozłączono";
     },
-
+    SOCKET_badgeUpdate(state, data){
+        if(data.server){
+            this.dispatch("memberUpdate", data);
+        }else{
+            this.dispatch("updateUser", data.badges);
+        }
+    },
+    SOCKET_userUpdate(state, data){
+        if(data.server){
+            this.dispatch("memberUpdate", data);
+        }else{
+            this.dispatch("updateUser", data.badges);
+        }
+    },
     SOCKET_updateCustomStatus(state, data) {
         console.log(data);
         if(data.server){

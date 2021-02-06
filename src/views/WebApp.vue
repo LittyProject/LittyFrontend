@@ -82,6 +82,7 @@ export default {
         };
         const response = await fetch("http://localhost:1920/users/@me", requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o użytkowniku")});
         user=await response.json();
+        user.token=localStorage.getItem("token");
         let servers = {};
         await Promise.all(
             user.servers.map(async (serverId) => {
@@ -98,7 +99,7 @@ export default {
         await this.$store.dispatch("setUser", user);
         await this.$store.dispatch("setServers", servers);
       }
-      this.$socket.emit('authentication', {token: localStorage.getItem("token")});
+      this.$socket.emit('authentication', {token: this.$store.getters.getToken});
       if(this.$store.getters.isConnected){
         this.load=true;
       }else{

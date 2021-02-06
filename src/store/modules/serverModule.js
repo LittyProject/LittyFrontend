@@ -54,6 +54,9 @@ const actions = {
     },
     memberCustomStatusUpdate(state, {server, id, customStatus}){
         state.commit('UPDATE_MEMBER_CUSTOM_STATUS', {server: server, member: id, customStatus: customStatus});
+    },
+    memberUpdate(state, data){
+        state.commit('UPDATE_MEMBER', {server: data.server, member: data.id, data: data.data});
     }
 }
 
@@ -92,7 +95,14 @@ const mutations = {
                 b.customStatus = data.customStatus;
             }
         });
-    }
+    },
+    UPDATE_MEMBER(state, data){
+        state.servers[data.server].members.map(b => {
+            if (b.id === data.member) {
+                b = Object.assign({}, b, data.data);
+            }
+        });
+    },
 }
 
 export default {

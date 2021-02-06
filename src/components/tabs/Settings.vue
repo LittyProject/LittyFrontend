@@ -10,7 +10,7 @@
         ><v-icon>mdi-home</v-icon> Kliknij, aby wrócić do aplikacji</button>
       </v-toolbar-title>
     </v-toolbar>
-    <SettingsHome v-if="this.$store.getters.getSettingsTab===0" :user="this.user"></SettingsHome>
+    <SettingsHome v-if="this.$store.getters.getSettingsTab===0"></SettingsHome>
     <SettingsNotifications v-if="this.$store.getters.getSettingsTab===1" :user="this.user"></SettingsNotifications>
     <SettingsView v-if="this.$store.getters.getSettingsTab===2" :user="this.user"></SettingsView>
     <SettingsSupport v-if="this.$store.getters.getSettingsTab===3" :user="this.user"></SettingsSupport>
