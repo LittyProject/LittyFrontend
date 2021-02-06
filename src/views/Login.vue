@@ -85,7 +85,7 @@ export default {
         const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: this.email, password: this.password })
+          body: JSON.stringify({ email: `${this.email}`, password: `${this.password}`})
         };
         const response = await fetch("http://localhost:1920/auth/login", requestOptions);
         const data = await response.json();

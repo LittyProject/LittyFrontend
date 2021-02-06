@@ -15,6 +15,7 @@ export default new Vuex.Store({
     nav: 0,
     settingsTab: 0,
     active: {},
+    editAvatar: false,
   },
   mutations: {
     authorization (state){
@@ -40,6 +41,9 @@ export default new Vuex.Store({
     },
     updateServersData(state, server){
       state.servers=server;
+    },
+    editAvatar(state, boolean){
+      state.editAvatar=boolean;
     }
   },
   getters: {
@@ -64,6 +68,9 @@ export default new Vuex.Store({
     getActive: state =>{
       return state.active;
     },
+    isEditingAvatar: state =>{
+      return state.editAvatar;
+    }
   },
   actions: {
   },

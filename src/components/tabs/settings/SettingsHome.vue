@@ -8,8 +8,10 @@
         <v-avatar
             :color="colors.grey"
             size="120"
+            @click="updateAvatar=true"
         >
           <img :src="user.avatarURL" alt="Avatar"/>
+          <UpdateAvatarModal></UpdateAvatarModal>
         </v-avatar>
       </UserStatus>
       <h2 class="mt-2">{{user.username}}<span>#{{user.tag}}</span></h2>
@@ -185,19 +187,29 @@
 <script>
 import colors from '@/assets/colors.json';
 import UserStatus from "@/components/layout/UserStatus";
+import UpdateAvatarModal from "@/components/layout/UpdateAvatarModal";
 
 export default {
   name: "SettingsHome",
-  components: {UserStatus},
+  components: {UserStatus, UpdateAvatarModal},
   computed:{
     user:{
       get(){
         return this.$store.getters.getUser;
       }
+    },
+    updateAvatar:{
+      get(){
+        return this.$store.getters.isEditingAvatar;
+      },
+      set(val){
+        this.$store.commit("editAvatar", val);
+      }
     }
   },
   data(){
     return {
+      avatar: false,
       userdata: {
         data:{
           username: this.$store.getters.getUser.username,
