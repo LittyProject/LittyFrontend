@@ -47,14 +47,30 @@
             <v-list-item-title>{{user.username}}#{{user.tag}}</v-list-item-title>
             <v-spacer></v-spacer>
             <v-list-item-subtitle v-if="user.status<5">{{utils.parseStatus(user)}}</v-list-item-subtitle>
-            <v-list-item-subtitle v-if="user.status>=5"><v-icon>{{utils.parseStatusToIcon(user.status)}}</v-icon> <span v-html="utils.parseStatus(user)"></span></v-list-item-subtitle>
+            <v-list-item-subtitle v-if="user.status>=5"><v-icon small>{{utils.parseStatusToIcon(user.status)}}</v-icon> <span v-html="utils.parseStatus(user)"></span></v-list-item-subtitle>
           </v-list-item-content>
           <v-btn outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title><h3>Akcje</h3></v-list-item-title>
-            <v-list-item-subtitle><v-btn outlined small class="mt-5 mb-5" color="success">Dodaj</v-btn></v-list-item-subtitle>
+            <v-list-item-subtitle>
+              <v-chip
+                v-for="badge in user.badges"
+                :key="badge.text"
+                class="ma-2"
+                :color="badge.color"
+                label
+                dark
+                small
+                outlined
+            >
+              <v-icon left>
+                {{badge.icon}}
+              </v-icon>
+              <b v-if="!badge.link">{{badge.text}}</b>
+              <b role="button" v-else @click="openNewTab(badge.link)">{{badge.text}}</b>
+            </v-chip>
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -91,7 +107,10 @@ export default {
       this.$nextTick(() => {
         this.showMenu = true
       })
-    }
+    },
+    openNewTab(link){
+      window.open(link);
+    },
   }
 }
 </script>

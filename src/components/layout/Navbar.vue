@@ -141,7 +141,6 @@ export default {
   async mounted() {
     if(localStorage.getItem("token")){
       this.login=true;
-      this.servers=JSON.parse(localStorage.getItem("servers"));
       if(localStorage.getItem("tab")){
         this.tab=parseInt(localStorage.getItem("tab"));
       }
@@ -206,11 +205,8 @@ export default {
     },
     servers:{
       get(){
-        return this.$store.getters.getServers;
+        return this.$store.getters.getServersArray;
       },
-      set(servers){
-        this.$store.dispatch("setServers", servers);
-      }
     },
   }
 }

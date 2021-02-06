@@ -27,7 +27,7 @@ const mutations = {
         if(data.server){
             this.dispatch("memberUpdate", data);
         }else{
-            this.dispatch("updateUser", data.badges);
+            this.dispatch("updateUser", data);
         }
     },
     SOCKET_updateCustomStatus(state, data) {

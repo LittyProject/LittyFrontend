@@ -31,8 +31,7 @@ const actions = {
         state.commit("CUSTOM_STATUS_UPDATE", customStatus);
     },
     updateUser(state, user) {
-        const update = Object.assign({}, state.state.user, user);
-        state.commit("UPDATE_USER", update);
+        state.commit("UPDATE_USER", user);
     }
 }
 
@@ -50,7 +49,7 @@ const mutations = {
         state.user.customStatus=customStatus;
     },
     UPDATE_USER(state, user){
-        state.user=user;
+        state.user=Object.assign({}, state.user, user);
     }
 }
 

@@ -10,6 +10,13 @@ const getters ={
     getServers(state){
         return state.servers;
     },
+    getServersArray(state){
+        let a = [];
+        for (let key in state.servers) {
+            a.push(state.servers[key]);
+        }
+        return a;
+    },
     getCurrentServerID(state){
         return state.currentServerId
     },
@@ -97,9 +104,9 @@ const mutations = {
         });
     },
     UPDATE_MEMBER(state, data){
-        state.servers[data.server].members.map(b => {
+        state.servers[data.server].members.forEach(b => {
             if (b.id === data.member) {
-                b = Object.assign({}, b, data.data);
+                state.servers[data.server].members[state.servers[data.server].members.findIndex(a=> a.id===data.member)] = Object.assign({}, b, data.data);
             }
         });
     },

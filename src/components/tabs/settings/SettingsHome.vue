@@ -38,6 +38,7 @@
           @submit="editUserData"
       >
         <v-alert
+            v-model="userdata.dimisableError"
             dense
             v-if="userdata.error.exist"
             type="error"
@@ -46,6 +47,7 @@
           {{userdata.error.message}}
         </v-alert>
         <v-alert
+            v-model="userdata.dimisableSuccess"
             dense
             v-if="userdata.success.exist"
             type="success"
@@ -60,6 +62,7 @@
                 label="Nazwa użytkownika"
                 type="text"
                 outlined
+                :rules="rules.username"
                 dark
             ></v-text-field>
           </v-col>
@@ -68,6 +71,7 @@
                 v-model="userdata.data.tag"
                 label="Tag"
                 type="text"
+                :rules="rules.tag"
                 outlined
                 dark
             ></v-text-field>
@@ -199,6 +203,8 @@ export default {
           username: this.$store.getters.getUser.username,
           tag: this.$store.getters.getUser.tag,
         },
+        dimisableError: true,
+        dimisableSuccess: true,
         error:{
           exist: false,
           message: null,
@@ -207,6 +213,17 @@ export default {
           exist: false,
           message: null
         }
+      },
+      rules: {
+        username:[
+          value => !!value || 'Username required.',
+          value => (value || '').length > 2 || 'Must be 3 or more characters long',
+          value => (value || '').length <= 24 || 'Must be 24 or fewer characters long',
+        ],
+        tag:[
+          value => !!value || 'Tag required.',
+          value => (value || '').length===4 || 'Must be 4 characters long',
+        ]
       },
       colors,
       dev: false,
@@ -231,6 +248,36 @@ export default {
       if(!this.userdata.data.username||!this.userdata.data.tag){
         this.userdata.error.exist=true;
         this.userdata.error.message="Wypełnij poprawnie formularz";
+        this.userdata.dimisableError=true;
+        return;
+      }
+      if(!this.userdata.data.username){
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Username required.";
+        this.userdata.dimisableError=true;
+        return;
+      }
+      if(!this.userdata.data.tag){
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Tag required.";
+        this.userdata.dimisableError=true;
+        return;
+      }
+      if(this.userdata.data.username.length<3){
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Username must be 3 or more characters long";
+        this.userdata.dimisableError=true;
+        return;
+      }
+      if(this.userdata.data.username.length>24){
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Username must be 24 or fewer characters long";
+        this.userdata.dimisableError=true;
+        return;
+      }
+      if(this.userdata.data.tag.length !==4){
+        this.userdata.error.exist=true;
+        this.userdata.error.message="Tag must be 4 characters long";
         return;
       }
       const requestOptions = {
@@ -241,9 +288,11 @@ export default {
       await fetch("http://localhost:1920/users/@me/edit", requestOptions).then(()=>{
         this.userdata.success.exist=true;
         this.userdata.success.message="Pomyślnie edytowano twoje dane";
+        this.userdata.dimisableSuccess=true;
       }).catch(()=>{
         this.userdata.error.exist=true;
         this.userdata.error.message="Błędne dane lub użytkownik o tej nazwie i tagu już istnieją";
+        this.userdata.dimisableSuccess=true;
       });
     }
   },
