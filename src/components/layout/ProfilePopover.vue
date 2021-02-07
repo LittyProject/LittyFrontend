@@ -50,9 +50,8 @@
             <v-list-item-subtitle v-if="user.status<5">{{utils.parseStatus(user)}}</v-list-item-subtitle>
             <v-list-item-subtitle v-if="user.status>=5"><v-icon small>{{utils.parseStatusToIcon(user.status)}}</v-icon> <span v-html="utils.parseStatus(user)"></span></v-list-item-subtitle>
           </v-list-item-content>
-          <div v-if="!this.$store.getters.getUser.friends.includes(`${user.id}`)">
-            <v-btn outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
-          </div>
+          <v-btn v-if="!this.$store.getters.getUser.friends.includes(`${user.id}`)" outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
+          <v-btn v-if="this.$store.getters.getUser.friends.includes(`${user.id}`)" outlined small class="mt-5 mb-5" color="danger"><v-icon color="danger">mdi-account-minus</v-icon></v-btn>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
