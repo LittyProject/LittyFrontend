@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import user from "./modules/userModule";
 import server from "./modules/serverModule";
 import gateway from "./modules/gatewayModule";
+import friends from "./modules/friendsModule";
 
 Vue.use(Vuex)
 
@@ -77,6 +78,7 @@ export default new Vuex.Store({
   modules: {
     user,
     server,
-    gateway
+    gateway,
+    friends
   }
 })

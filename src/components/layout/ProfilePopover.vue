@@ -27,17 +27,18 @@
             <v-badge
                 dot
                 bottom
-                offset-x="10"
-                offset-y="10"
-                style="z-index: 10"
                 :color="utils.parseStatusToColor(user.status)"
+                offset-x="7"
+
             >
               <v-avatar
-                  size="35"
+                  size="45"
               >
                 <img
                     :src="user.avatarURL"
                     :alt="user.username"
+                    width="256"
+                    height="256"
                 >
               </v-avatar>
             </v-badge>
@@ -49,7 +50,9 @@
             <v-list-item-subtitle v-if="user.status<5">{{utils.parseStatus(user)}}</v-list-item-subtitle>
             <v-list-item-subtitle v-if="user.status>=5"><v-icon small>{{utils.parseStatusToIcon(user.status)}}</v-icon> <span v-html="utils.parseStatus(user)"></span></v-list-item-subtitle>
           </v-list-item-content>
-          <v-btn outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
+          <div v-if="!this.$store.getters.getUser.friends.includes(`${user.id}`)">
+            <v-btn outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
+          </div>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
@@ -82,6 +85,7 @@
 <script>
 const utils = require('@/utils');
 import UserRightClickMenu from "@/components/layout/UserRightClickMenu";
+import { mapGetters } from 'vuex'
 
 export default {
   name: "ProfilePopover",
@@ -111,6 +115,14 @@ export default {
     openNewTab(link){
       window.open(link);
     },
+  },
+  computed:{
+    u:{
+      get(){
+        return this.$store.getters.getUser;
+      }
+    },
+    ...mapGetters(["isFriend"])
   }
 }
 </script>

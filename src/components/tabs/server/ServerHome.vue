@@ -119,7 +119,6 @@
         </v-col>
       </v-row>
     </div>
-    <UserRightClickMenu :x="x" :y="y" :user="user" :type="1" :showMenu="showMenu"></UserRightClickMenu>
   </div>
 </template>
 
@@ -128,22 +127,17 @@
 import ServerNavbar from "@/components/layout/ServerNavbar";
 import Topbar from "@/components/layout/Topbar";
 import ProfilePopover from "@/components/layout/ProfilePopover";
-import UserRightClickMenu from "@/components/layout/UserRightClickMenu";
 import ServerChannel from "@/components/tabs/server/ServerChannel";
 import colors from '@/assets/colors.json';
 import utils from '@/utils';
 
 export default {
   name: "ServerHome",
-  components: {ServerChannel, ServerNavbar, Topbar, ProfilePopover, UserRightClickMenu},
+  components: {ServerChannel, ServerNavbar, Topbar, ProfilePopover},
   data(){
     return {
       colors,
       utils,
-      showMenu: false,
-      x: 0,
-      y: 0,
-      user: null,
     }
   },
   computed:{
@@ -161,18 +155,6 @@ export default {
       }
     }
   },
-  methods:{
-    show (e, member) {
-      e.preventDefault()
-      this.showMenu = false;
-      this.x = e.clientX;
-      this.y = e.clientY;
-      this.user=member;
-      this.$nextTick(() => {
-        this.showMenu = true
-      })
-    }
-  }
 }
 
 

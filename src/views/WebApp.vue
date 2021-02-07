@@ -84,6 +84,7 @@ export default {
         user=await response.json();
         user.token=localStorage.getItem("token");
         let servers = {};
+        let friends = [];
         await Promise.all(
             user.servers.map(async (serverId) => {
               const requestOptions = {
@@ -95,9 +96,19 @@ export default {
               servers[data.id]=data;
             })
         );
+        for(let a in user.friends){
+          const requestOptions = {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
+          };
+          const response = await fetch("http://localhost:1920/users/"+user.friends[a], requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o serwerze")});
+          const data = await response.json();
+          friends.push(data);
+        }
         await this.$store.dispatch("setToken", user.token);
         await this.$store.dispatch("setUser", user);
         await this.$store.dispatch("setServers", servers);
+        await this.$store.dispatch("userFriends", friends);
       }
       this.$socket.emit('authentication', {token: this.$store.getters.getToken});
       if(this.$store.getters.isConnected){

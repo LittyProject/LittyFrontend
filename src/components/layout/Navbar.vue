@@ -80,6 +80,7 @@
 
       <v-divider></v-divider>
 
+
       <v-list
           dense
           v-if="this.$store.getters.getNav<=0"
@@ -104,6 +105,37 @@
         </v-list-item>
       </v-list>
 
+      <v-list
+          dense
+          v-if="this.$store.getters.getNav>=1"
+          nav
+      >
+        <v-list-item
+            v-for="friend in this.friends"
+            :key="friend.id"
+            link
+            class="dark-list pa-1"
+        >
+          <v-list-item-icon>
+            <v-badge
+                dot
+                bottom
+                :color="utils.parseStatusToColor(friend.status)"
+                offset-x="7"
+            >
+              <v-avatar size="35">
+                <img :src="friend.avatarURL" :alt="friend.username"/>
+              </v-avatar>
+            </v-badge>
+          </v-list-item-icon>
+          <v-list-item-content  class="dark-content">
+            <v-list-item-title
+            ><h4 class="d-block">{{ friend.username }}#{{friend.tag}}</h4></v-list-item-title>
+            <h6 class="text--white"><span class="d-block"><v-icon v-if="friend.status>4" small dark>{{utils.parseStatusToIcon(friend.status)}}</v-icon> <span class="text--white" v-html="utils.parseStatus(friend)"></span></span></h6>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
       <div>
         <button>
 
@@ -122,6 +154,7 @@ import colors from '@/assets/colors.json';
 import Topbar from "@/components/layout/Topbar";
 import UserStatus from "@/components/layout/UserStatus";
 import logo from '../../assets/logo.svg';
+const utils = require('@/utils')
 
 export default {
   name: 'Navbar',
@@ -136,6 +169,7 @@ export default {
       login: false,
       tab: 0,
       nav: 0,
+      utils
     }
   },
   async mounted() {
@@ -208,6 +242,11 @@ export default {
         return this.$store.getters.getServersArray;
       },
     },
+    friends:{
+      get(){
+        return this.$store.getters.getFriends;
+      }
+    }
   }
 }
 

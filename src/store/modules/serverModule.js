@@ -104,9 +104,11 @@ const mutations = {
         });
     },
     UPDATE_MEMBER(state, data){
-        state.servers[data.server].members.forEach(b => {
+        state.servers[data.server].members.map(b => {
             if (b.id === data.member) {
-                state.servers[data.server].members[state.servers[data.server].members.findIndex(a=> a.id===data.member)] = Object.assign({}, b, data.data);
+                for(let a in data.data){
+                    b[a]=data.data[a];
+                }
             }
         });
     },

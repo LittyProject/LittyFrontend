@@ -26,24 +26,24 @@ const mutations = {
     SOCKET_userUpdate(state, data){
         if(data.server){
             this.dispatch("memberUpdate", data);
+            this.dispatch("userFriendUpdate", {member: data.id, data: data.data});
         }else{
             this.dispatch("updateUser", data);
         }
     },
     SOCKET_updateCustomStatus(state, data) {
-        console.log(data);
         if(data.server){
             if(data.status&&data.customStatus) {
                 this.dispatch("memberStatusUpdate", {server: data.server, id: data.id, status: data.status});
                 this.dispatch("memberCustomStatusUpdate", {server: data.server, id: data.id, customStatus: data.customStatus});
+                this.dispatch("userFriendUpdate", {member: data.id, data:{status: data.status, customStatus: data.customStatus}});
             }else{
                 if(data.status) {
                     this.dispatch("memberStatusUpdate", {server: data.server, id: data.id, status: data.status});
-                }
-                if(data.customStatus) {
-                    this.dispatch("memberCustomStatusUpdate", {server: data.server, id: data.id, customStatus: data.customStatus});
+                    this.dispatch("userFriendUpdate", {member: data.id, data:{status: data.status}});
                 }
             }
+
         }else{
             this.dispatch("updateUser", data);
         }
@@ -56,7 +56,7 @@ const getters = {
     },
     isConnected(state) {
         return state.isConnected;
-    }
+    },
 }
 
 const actions = {
