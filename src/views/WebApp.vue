@@ -105,12 +105,12 @@ export default {
           const data = await response.json();
           friends.push(data);
         }
-        await this.$store.dispatch("setToken", user.token);
-        await this.$store.dispatch("setUser", user);
-        await this.$store.dispatch("setServers", servers);
-        await this.$store.dispatch("userFriends", friends);
+        this.$store.dispatch("setToken", user.token);
+        this.$store.dispatch("setUser", user);
+        this.$store.dispatch("setServers", servers);
+        this.$store.dispatch("userFriends", friends);
       }
-      this.$socket.emit('authentication', {token: this.$store.getters.getToken});
+      this.$socket.emit('authentication', {token: localStorage.getItem("token"), type: 'BEARER'});
       if(this.$store.getters.isConnected){
         this.load=true;
       }else{
@@ -118,12 +118,6 @@ export default {
         this.load=false;
       }
     }
-  },
-  async created(){
-    if(!localStorage.getItem("token")){
-      return await this.$router.push({name: "Login"});
-    }
-    this.$socket.emit('authentication', {token: localStorage.getItem("token")});
   },
   async mounted() {
     await this.init(true);

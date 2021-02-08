@@ -53,6 +53,28 @@
           <v-btn v-if="!this.$store.getters.getUser.friends.includes(`${user.id}`)" outlined small class="mt-5 mb-5" color="white"><v-icon color="white">mdi-account-plus</v-icon></v-btn>
           <v-btn v-if="this.$store.getters.getUser.friends.includes(`${user.id}`)" outlined small class="mt-5 mb-5" color="danger"><v-icon color="danger">mdi-account-minus</v-icon></v-btn>
         </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list>
+        <div class="bg-0">
+          <v-list-item v-if="this.$store.getters.getPresence !==null">
+            <v-list-item-icon>
+              <v-avatar
+                rounded
+              >
+                <img :src="this.$store.getters.getPresence.icon">
+              </v-avatar>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <h4 class="d-block"><v-icon small>{{utils.parseStatusToIcon(this.$store.getters.getPresence.type)}}</v-icon> <span v-html="utils.parseStatus({status: this.$store.getters.getPresence.type, customStatus: this.$store.getters.getPresence.appName})"></span></h4>
+              <span class="d-block">{{this.$store.getters.getPresence.presence.title}}</span>
+              <span class="d-block">{{this.$store.getters.getPresence.presence.subtitle}}</span>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list>
         <v-list-item>
           <v-list-item-content>
             <v-list-item-subtitle>

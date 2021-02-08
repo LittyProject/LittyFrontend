@@ -2,7 +2,8 @@
 
 const state ={
     token: localStorage.getItem("token") || null,
-    user: null
+    user: null,
+    presence: null
 }
 
 const getters = {
@@ -15,11 +16,17 @@ const getters = {
     getUser(state) {
         return state.user;
     },
+    getPresence(state){
+        return state.presence;
+    }
 };
 
 const actions = {
     setToken(state, token){
         state.commit("TOKEN", token);
+    },
+    setPresence(state, data){
+        state.commit("UPDATE_USER_PRESENCE", data);
     },
     setUser(state, user){
         state.commit("USER", user);
@@ -50,6 +57,9 @@ const mutations = {
     },
     UPDATE_USER(state, user){
         state.user=Object.assign({}, state.user, user);
+    },
+    UPDATE_USER_PRESENCE(state, data){
+        state.presence=data;
     }
 }
 

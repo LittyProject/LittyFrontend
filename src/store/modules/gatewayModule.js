@@ -1,3 +1,4 @@
+import vm from '../../main';
 
 const state = {
     isConnected: false,
@@ -8,9 +9,13 @@ const mutations = {
     SOCKET_connect(state){
       state.socketMessage="Łączenie";
       state.isConnected = true;
+        vm.$socket.emit('authentication', {token: localStorage.getItem("token"), type: 'BEARER'});
     },
     SOCKET_authenticated(state){
       state.socketMessage=  "Połączono";
+    },
+    SOCKET_authentication_error(state, data){
+        state.socketMessage=data.message;
     },
     SOCKET_disconnect(state) {
         state.isConnected = false;
@@ -30,6 +35,9 @@ const mutations = {
         }else{
             this.dispatch("updateUser", data);
         }
+    },
+    SOCKET_userPresenceUpdate(state, data){
+        this.dispatch("setPresence", data);
     },
     SOCKET_updateCustomStatus(state, data) {
         if(data.server){
