@@ -4,6 +4,7 @@ import user from "./modules/userModule";
 import server from "./modules/serverModule";
 import gateway from "./modules/gatewayModule";
 import friends from "./modules/friendsModule";
+import messages from "./modules/messagesModule";
 
 Vue.use(Vuex)
 
@@ -79,6 +80,7 @@ export default new Vuex.Store({
     user,
     server,
     gateway,
-    friends
+    friends,
+    messages
   }
 })

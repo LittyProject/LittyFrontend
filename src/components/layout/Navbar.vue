@@ -86,6 +86,9 @@
           v-if="this.$store.getters.getNav<=0"
           nav
       >
+        <v-list-item>
+          <CreateServerModal></CreateServerModal>
+        </v-list-item>
         <v-list-item
             v-for="server in this.servers"
             :key="server.name"
@@ -152,13 +155,14 @@
 <script>
 import colors from '@/assets/colors.json';
 import Topbar from "@/components/layout/Topbar";
+import CreateServerModal from "@/components/layout/CreateServerModal";
 import UserStatus from "@/components/layout/UserStatus";
 import logo from '../../assets/logo.svg';
 const utils = require('@/utils')
 
 export default {
   name: 'Navbar',
-  components: {Topbar, UserStatus},
+  components: {Topbar, UserStatus, CreateServerModal},
   props: [
     'name', 'icon'
   ],

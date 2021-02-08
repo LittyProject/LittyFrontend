@@ -28,6 +28,9 @@ const mutations = {
             this.dispatch("updateUser", data.badges);
         }
     },
+    SOCKET_messageCreate(state, data){
+        this.dispatch("addMessage", data);
+    },
     SOCKET_userUpdate(state, data){
         if(data.server){
             this.dispatch("memberUpdate", data);
@@ -35,6 +38,9 @@ const mutations = {
         }else{
             this.dispatch("updateUser", data);
         }
+    },
+    async SOCKET_createServer(state, data){
+        this.dispatch("setServer", data);
     },
     SOCKET_userPresenceUpdate(state, data){
         this.dispatch("setPresence", data);

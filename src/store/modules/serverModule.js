@@ -31,6 +31,9 @@ const getters ={
     },
     getServer(state, id){
         return state.servers[id];
+    },
+    getMember : (state) => (id) =>{
+        return state.servers[state.currentServerId].members.find(d=> d.id===id);
     }
 }
 
