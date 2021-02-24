@@ -1,4 +1,5 @@
 import Vue from "vue";
+import vm from '../../main';
 
 const state ={
     currentServerId: null,
@@ -71,6 +72,10 @@ const actions = {
 }
 
 const mutations = {
+    SOCKET_setServers(state, servers){
+        servers.forEach(a=> Vue.set(state.servers, a.id, a));
+        vm.$store.commit("STATE_SOCKET", {type: "server", bol: true});
+    },
     SET_SERVERS(state, servers) {
         state.servers=servers;
     },

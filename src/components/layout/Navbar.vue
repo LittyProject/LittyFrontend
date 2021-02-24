@@ -86,12 +86,12 @@
           v-if="this.$store.getters.getNav<=0"
           nav
       >
-        <v-list-item>
+        <v-list-item dark>
           <CreateServerModal></CreateServerModal>
         </v-list-item>
         <v-list-item
             v-for="server in this.servers"
-            :key="server.name"
+            :key="server.id"
             link
             class="dark-list pa-1"
         >
@@ -103,7 +103,14 @@
 
           <v-list-item-content @click="setActive({type: 1, id: server.id, data: server})" class="dark-content">
             <v-list-item-title
-            ><h3 class="d-block">{{ server.name }}</h3><span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ server.members.filter(x => x.status>1).length }} <div class="ml-2 dot-grey"></div>{{server.members.filter(x => x.status===0||x.status===1).length }}</span></v-list-item-title>
+            >
+              <h3 class="d-block">
+                <v-icon v-if="server.flags.includes('VERIFIED')&&!server.flags.includes('PARTNERED')" small color="light-blue">mdi-check-decagram</v-icon>
+                <v-icon v-if="!server.flags.includes('VERIFIED')&&server.flags.includes('PARTNERED')" small color="green accent-2">mdi-shield-star</v-icon>
+                <v-icon v-if="server.flags.includes('VERIFIED')&&server.flags.includes('PARTNERED')" small color="yellow lighten-1">mdi-flash-circle</v-icon>
+                {{ server.name }}
+              </h3>
+              <span class="d-block mt-2 ml-1"><div class="dot-green"></div> {{ server.members.filter(x => x.status>1).length }} <div class="ml-2 dot-grey"></div>{{server.members.filter(x => x.status===0||x.status===1).length }}</span></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -188,8 +195,23 @@ export default {
     to(value) {
       this.$router.push({name: value});
     },
-    setTab(tab){
+    async setTab(tab){
       let a = parseInt(tab);
+      if(a===1){
+        if(this.$store.getters.getFriends.length===0){
+          let friends = [];
+          for(let a in this.$store.getters.getUser.friends){
+            const requestOptions = {
+              method: "GET",
+              headers: { "Content-Type": "application/json", "Authorization": `BEARER ${localStorage.getItem("token")}` }
+            };
+            const response = await fetch("http://localhost:1920/users/"+this.$store.getters.getUser.friends[a], requestOptions);
+            const data = await response.json();
+            friends.push(data);
+          }
+          this.$store.dispatch("userFriends", friends);
+        }
+      }
       if(a<=0){
         localStorage.setItem("nav", tab);
         this.$store.commit("updateNav", 0);

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Navbar v-if="login" icon="mdi-comment-multiple" name="general"/>
+    <Navbar v-if="login" icon="mdi-comment-multiple" name="Publiczne serwery"/>
+    <h3>Nic tu nie ma :)</h3>
   </div>
 </template>
 

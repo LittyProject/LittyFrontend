@@ -2,10 +2,19 @@ import vm from '../../main';
 
 const state = {
     isConnected: false,
-    socketMessage: ''
+    socketMessage: '',
+    socket:{
+        auth: false,
+        server: false,
+        user: false,
+        banned: false
+    }
 }
 
 const mutations = {
+    STATE_SOCKET(state, data){
+        state.socket[data.type]=data.bol;
+    },
     SOCKET_connect(state){
       state.socketMessage="Łączenie";
       state.isConnected = true;
@@ -13,13 +22,21 @@ const mutations = {
     },
     SOCKET_authenticated(state){
       state.socketMessage=  "Połączono";
+      vm.$store.commit("STATE_SOCKET", {type: "auth", bol: true});
     },
     SOCKET_authentication_error(state, data){
         state.socketMessage=data.message;
+        if(data.message==="User is banned"){
+            vm.$store.commit("STATE_SOCKET", {type: "banned", bol: true});
+        }
+        state.socket.auth=false;
     },
     SOCKET_disconnect(state) {
         state.isConnected = false;
         state.socketMessage=  "Rozłączono";
+        state.socket.auth=false;
+        state.socket.server=false;
+        state.socket.user=false;
     },
     SOCKET_badgeUpdate(state, data){
         if(data.server){
@@ -71,6 +88,9 @@ const getters = {
     isConnected(state) {
         return state.isConnected;
     },
+    getSocketState(state){
+        return state.socket;
+    }
 }
 
 const actions = {

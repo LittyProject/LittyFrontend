@@ -1,43 +1,38 @@
 <template>
   <div>
-    <div class="text-center mt-5" v-if="!load">
-      <img v-if="!error" src="@/assets/logo.svg" width="200" height="200">
-      <v-icon v-if="error" :size="120" color="red">
-        mdi-alert
-      </v-icon>
+    <div v-if="this.$store.getters.isConnected&&this.$store.getters.getSocketState.auth&&this.$store.getters.getSocketState.user&&this.$store.getters.getSocketState.server&&!this.$store.getters.getUser.banned">
+      <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
+      <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
+      <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
+      <ServerHome v-if="this.$store.getters.getTab===3&&this.$store.getters.getActive.type===1" login="true"></ServerHome>
+    </div>
+    <div class="text-center" v-else-if="this.$store.getters.getSocketState.banned">
+      <img src="@/assets/logo.svg" width="200" height="200">
       <h1 class="mt-2">Litty</h1>
       <div class="mt-10 mb-16" style="background-color: #414551; height: 4px; width: 90%; margin-left: 5%"></div>
       <v-progress-circular
           :size="70"
           :width="7"
-          v-if="!error"
+          color="red"
+          class="mt-16"
+          indeterminate
+      ></v-progress-circular>
+      <h3 class="mt-10">Twój dostęp do aplikacji został wzbroniony</h3>
+    </div>
+    <div class="text-center" v-else>
+      <img src="@/assets/logo.svg" width="200" height="200">
+      <h1 class="mt-2">Litty</h1>
+      <div class="mt-10 mb-16" style="background-color: #414551; height: 4px; width: 90%; margin-left: 5%"></div>
+      <v-progress-circular
+          :size="70"
+          :width="7"
           color="white"
           class="mt-16"
           indeterminate
       ></v-progress-circular>
-      <h3 v-if="!error" class="mt-10">Ładowanie aplikacji...</h3>
-      <h1 v-if="error" class="mt-16 mb-16">Błąd podczas ładowania</h1>
-      <v-btn @click="init" v-if="error" outlined color="success" class="mt-16">Spróbuj ponownie</v-btn>
-    </div>
-    <div v-else>
-      <div v-if="this.$store.getters.isConnected">
-        <HomeApp v-if="this.$store.getters.getTab===0" login="true"></HomeApp>
-        <DirectMessage v-if="this.$store.getters.getTab===1" login="true"></DirectMessage>
-        <Settings v-if="this.$store.getters.getTab===2" login="true"></Settings>
-        <ServerHome v-if="this.$store.getters.getTab===3&&this.$store.getters.getActive.type===1" login="true"></ServerHome>
-      </div>
-      <div v-else class="text-center">
-        <v-icon class="mt-16" :size="120" color="red">
-          mdi-alert
-        </v-icon>
-        <h1 class="mt-2">Litty</h1>
-        <div class="mt-10 mb-16" style="background-color: #414551; height: 4px; width: 90%; margin-left: 5%"></div>
-        <h2 class="mt-16 mb-16 pt-16">Nie można nawiązać połączenia z serwerem Litty</h2>
-        <v-btn @click="init" outlined color="success" class="mt-5">Spróbuj ponownie</v-btn>
-        <div style="padding-top:5%;display: table;text-align: center;margin-left: auto;margin-right: auto;">
-          <b><a>Zgłoś problem</a></b>
-        </div>
-      </div>
+      <h3 v-if="!this.$store.getters.getSocketState.auth" class="mt-10">Oczekuje na odpowiedź serwera</h3>
+      <h3 v-if="this.$store.getters.getSocketState.auth&&!this.$store.getters.getSocketState.user" class="mt-10">Autoryzacja</h3>
+      <h3 v-if="this.$store.getters.getSocketState.auth&&this.$store.getters.getSocketState.user&&!this.$store.getters.getSocketState.server" class="mt-10">Oczekiwanie na liste serwerów</h3>
     </div>
   </div>
 </template>
@@ -59,7 +54,7 @@ export default {
     }
   },
   methods:{
-    setTab(tab){
+    async setTab(tab){
       localStorage.setItem("tab", tab);
       this.$store.commit("updateTab", tab);
       this.tab=tab;
@@ -75,42 +70,10 @@ export default {
         this.$store.commit("updateTab", parseInt(localStorage.getItem("tab")));
       }
       if(load){
-        let user = {};
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "Authorization": `BEARER ${localStorage.getItem("token")}` }
-        };
-        const response = await fetch("http://localhost:1920/users/@me", requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o użytkowniku")});
-        user=await response.json();
-        user.token=localStorage.getItem("token");
-        let servers = {};
-        let friends = [];
-        await Promise.all(
-            user.servers.map(async (serverId) => {
-              const requestOptions = {
-                method: "GET",
-                headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
-              };
-              const response = await fetch("http://localhost:1920/servers/"+serverId, requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o serwerze")});
-              const data = await response.json();
-              servers[data.id]=data;
-            })
-        );
-        for(let a in user.friends){
-          const requestOptions = {
-            method: "GET",
-            headers: { "Content-Type": "application/json", "Authorization": `BEARER ${user.token}` }
-          };
-          const response = await fetch("http://localhost:1920/users/"+user.friends[a], requestOptions).catch(()=> {this.error=true;console.error("Błąd podczas pobierania informacji o serwerze")});
-          const data = await response.json();
-          friends.push(data);
+        if(this.$socket.connected){
+          this.$socket.emit('authentication', {token: localStorage.getItem("token"), type: 'BEARER'});
         }
-        this.$store.dispatch("setToken", user.token);
-        this.$store.dispatch("setUser", user);
-        this.$store.dispatch("setServers", servers);
-        this.$store.dispatch("userFriends", friends);
       }
-      this.$socket.emit('authentication', {token: localStorage.getItem("token"), type: 'BEARER'});
       if(this.$store.getters.isConnected){
         this.load=true;
       }else{
@@ -121,6 +84,11 @@ export default {
   },
   async mounted() {
     await this.init(true);
+  },
+  computed:{
+    socket(){
+      return this.$store.getters.getSocketState;
+    }
   }
 }
 </script>

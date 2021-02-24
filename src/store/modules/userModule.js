@@ -1,4 +1,4 @@
-
+import vm from '../../main';
 
 const state ={
     token: localStorage.getItem("token") || null,
@@ -43,6 +43,10 @@ const actions = {
 }
 
 const mutations = {
+    SOCKET_setUser(state, user){
+        state.user=user;
+        vm.$store.commit("STATE_SOCKET", {type: "user", bol: true});
+    },
     TOKEN(state, token){
         state.token=token;
     },
