@@ -117,7 +117,8 @@ export default {
   },
   methods:{
     setStatus(status){
-      this.$socket.emit('updateCustomStatus', {status: status});
+      this.$socket.emit('userUpdateStatus', {status: status});
+      console.log(status);
     }
   },
   computed:{

@@ -80,7 +80,7 @@ export default {
   },
   methods:{
     save(){
-      this.$socket.emit('updateCustomStatus', {status: parseInt(this.stateType), customStatus: this.state});
+      this.$socket.emit('userUpdateStatus', {status: parseInt(this.stateType), customStatus: this.state});
       this.customStatus = false;
       this.stateType=0;
       this.state=null;

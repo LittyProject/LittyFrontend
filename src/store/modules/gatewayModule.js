@@ -62,22 +62,29 @@ const mutations = {
     SOCKET_userPresenceUpdate(state, data){
         this.dispatch("setPresence", data);
     },
-    SOCKET_updateCustomStatus(state, data) {
-        if(data.server){
-            if(data.status&&data.customStatus) {
+    SOCKET_memberUpdateStatus(state, data) {
+        if(data.server) {
+            if (data.status && data.customStatus) {
                 this.dispatch("memberStatusUpdate", {server: data.server, id: data.id, status: data.status});
-                this.dispatch("memberCustomStatusUpdate", {server: data.server, id: data.id, customStatus: data.customStatus});
-                this.dispatch("userFriendUpdate", {member: data.id, data:{status: data.status, customStatus: data.customStatus}});
-            }else{
-                if(data.status) {
+                this.dispatch("memberCustomStatusUpdate", {
+                    server: data.server,
+                    id: data.id,
+                    customStatus: data.customStatus
+                });
+                this.dispatch("userFriendUpdate", {
+                    member: data.id,
+                    data: {status: data.status, customStatus: data.customStatus}
+                });
+            } else {
+                if (data.status) {
                     this.dispatch("memberStatusUpdate", {server: data.server, id: data.id, status: data.status});
-                    this.dispatch("userFriendUpdate", {member: data.id, data:{status: data.status}});
+                    this.dispatch("userFriendUpdate", {member: data.id, data: {status: data.status}});
                 }
             }
-
-        }else{
-            this.dispatch("updateUser", data);
         }
+    },
+    SOCKET_userUpdateStatus(state, data) {
+        if(!data.server) this.dispatch("updateUser", data);
     }
 }
 
